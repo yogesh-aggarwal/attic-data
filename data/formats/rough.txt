@@ -1,0 +1,19 @@
+product -----
+
+costing:
+  base_price:
+    currency: string (Currency code, e.g., "USD", "EUR")
+    value: number (Base price of the product, e.g., 299.99)
+  sale_price:
+    currency: string (Currency code for the sale price, e.g., "USD")
+    value: number (Sale price, e.g., 249.99)
+    start_date: string (ISO date when the sale starts, e.g., "2024-10-01")
+    end_date: string (ISO date when the sale ends, e.g., "2024-10-31")
+  regional_pricing:
+    region_code: number (Price for specific regions, e.g., US: 249.99, EU: 259.99)
+  tax_inclusive: boolean (Indicates if tax is included in the price, true/false)
+  tax_rate: number (Tax rate applied, e.g., 0.07 for 7%)
+  complex_pricing_rules:
+    - condition: string (Special pricing condition, e.g., "Buy 1 get 1 50% off")
+
+---

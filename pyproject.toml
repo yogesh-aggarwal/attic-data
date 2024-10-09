@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "attic-data"
+version = "0.1.0"
+description = ""
+authors = ["Yogesh Aggarwal <yogeshdevaggarwal@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+selenium = "^4.25.0"
+undetected-chromedriver = "^3.5.5"
+bs4 = "^0.0.2"
+ollama = "^0.3.3"
+lxml = "^5.3.0"
+setuptools = "^75.1.0"
+fake-useragent = "^1.5.1"
+
+[tool.poetry.scripts]
+main = "attic_data.scrape:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

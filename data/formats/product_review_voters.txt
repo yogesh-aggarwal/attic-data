@@ -1,0 +1,7 @@
+review_id: string (review id)
+
+upvoters: array of strings (user ids)
+  - string (user id)
+
+downvoters: array of strings (user ids)
+  - string (user id)

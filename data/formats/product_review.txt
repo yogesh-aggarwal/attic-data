@@ -1,0 +1,28 @@
+_id: number (Unique ID for the review, e.g., 3481)
+
+metadata:
+  created_at: string (ISO date when the product was created, e.g., "2024-10-01T12:00:00Z")
+  created_by: string (Username of the user who created the product, e.g., "music_lover92")
+  updated_at: string (ISO date when the product was last updated, e.g., "2024-10-01T12:00:00Z")
+
+  is_edited: boolean (Whether the review has been edited, e.g., true)
+  is_private: boolean (Whether the review is private, e.g., false)
+
+product_id: number (ID of the product being reviewed, e.g., 1234)
+
+rating: number (Review rating, e.g., 5)
+
+comment: string (Review content) (Review content, e.g., "This is the best product ever!")
+
+helpful_votes: number (Number of helpful votes for the review, e.g., 42)
+total_votes: number (Total number of votes for the review, e.g., 50)
+
+geography:
+  latitude: number (Latitude of the review, e.g., 34.0522)
+  longitude: number (Longitude of the review, e.g., -118.2437)
+
+  country: string (Country where the review was created, e.g., "US")
+  state: string (State where the review was created, e.g., "CA")
+  city: string (City where the review was created, e.g., "Los Angeles")
+
+language: string (Language of the review, e.g., "en")

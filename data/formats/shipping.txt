@@ -1,0 +1,17 @@
+default_shipping_class: string (Default shipping class, e.g., "standard")
+
+shipping_costs:
+  standard:
+    domestic: number (Domestic shipping cost, e.g., 5.99)
+    international: number (International shipping cost, e.g., 19.99)
+  express:
+    domestic: number (Domestic express shipping cost, e.g., 9.99)
+    international: number (International express shipping cost, e.g., 29.99)
+
+handling_time_days: number (Number of days required for handling, e.g., 1)
+
+customs:
+  hs_code: string (Harmonized System code for customs, e.g., "851830")
+  country_of_origin: string (Country of origin, e.g., "Germany")
+  applicable_tariffs:
+    region_code: number (Tariff percentage by region, e.g., US: 0.05, EU: 0.04)

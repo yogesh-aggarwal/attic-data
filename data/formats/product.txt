@@ -1,0 +1,66 @@
+_id: number (Unique identifier for the product, e.g., 123456)
+
+metadata:
+  created_at: string (ISO date when the product was created, e.g., "2024-10-01T12:00:00Z")
+  updated_at: string (ISO date when the product was last updated, e.g., "2024-10-01T12:00:00Z")
+  published_at: string (ISO date when the product was published, e.g., "2024-10-01T12:00:00Z")
+  unpublished_at: string (ISO date when the product was unpublished, e.g., "2024-10-01T12:00:00Z")
+  reviewed_at: string (ISO date when the product was last reviewed, e.g., "2024-10-01T12:00:00Z")
+  released_at: string (ISO date when the product was released, e.g., "2024-10-01T12:00:00Z")
+  expiration_date: string (ISO date when the product expires, e.g., "2024-10-01T12:00:00Z")
+
+media:
+  images:
+    - url: string (Image URL of the product)
+      alt_text: string (Alt text for the image)
+  videos:
+    - url: string (Video URL of the product)
+      description: string (Video description, e.g., "Unboxing video")
+
+listing:
+  sku: string (Stock Keeping Unit, a unique product identifier, e.g., "ABC-1234")
+  seo:
+    meta_title: string (Meta title for SEO purposes)
+    meta_description: string (Meta description for SEO purposes)
+    meta_keywords: string (Meta keywords for SEO purposes, e.g., "wireless headphones, noise-cancelling")
+    canonical_url: string (Canonical URL for the product page)
+  title: string (Product name, e.g., "Apple iPhone 13 Pro Max 512GB")
+  description:
+    short: string (plain text) (Short description of the product, e.g., "Latest iPhone model with advanced features")
+    long: string (html using h, p and br tags only) (Long description with detailed information about the product)
+  categories:
+    primary: string (Main category of the product, e.g., "electronics")
+    secondary: string (Secondary category, e.g., "audio")
+    subcategory: string (Subcategory, e.g., "headphones")
+  tags:
+    - string (Array of tags for the product, e.g., "wireless", "bluetooth")
+  status:
+    availibility: string (Product availability, options: "in_stock", "out_of_stock", "preorder")
+    lifecycle: string (Product status, options: "active", "discontinued", "seasonal", "pre-release")
+    featured: boolean (Indicates if the product is featured, true/false)
+    on_sale: boolean (Indicates if the product is on sale, true/false)
+
+details:
+  brand: string (Product brand, e.g., "Apple")
+  model: string (Product model number, e.g., "iPhone 13 Pro Max")
+  condition: string (Product condition, options: "new", "used", "refurbished")
+  clearance: boolean (Indicates if the product is on clearance, true/false)
+  legal:
+    warranty_info: string (Warranty information, detailed description)
+    return_policy: string (Return policy, supports multi-line text)
+  attributes:
+    - name: string (Attribute name, e.g., "Dimensions")
+      value: string (Attribute value, e.g., "6.33 x 3.07 x 0.29 inches")
+
+variants:
+  - ids of other products that are variations of this product, e.g., 654321
+
+reviews:
+  total_count: number (Total number of reviews, e.g., 348)
+  average_rating: number (Average rating out of 5, e.g., 4.7)
+  star_distribution:
+    5: number (Number of 5-star reviews, e.g., 278)
+    4: number (Number of 4-star reviews, e.g., 45)
+    3: number (Number of 3-star reviews, e.g., 12)
+    2: number (Number of 2-star reviews, e.g., 8)
+    1: number (Number of 1-star reviews, e.g., 5)

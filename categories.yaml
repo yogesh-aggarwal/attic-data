@@ -1,0 +1,317 @@
+electronics:
+  audio:
+    - headphones
+    - speakers
+    - soundbars
+    - home theater systems
+    - Bluetooth adapters
+    - microphones
+    - amplifiers
+    - audio interfaces
+    - turntables
+    - smart speakers
+  computers:
+    - laptops
+    - desktop computers
+    - tablets
+    - computer accessories
+    - monitors
+    - computer components
+    - gaming PCs
+    - network devices
+    - external storage
+    - gaming accessories
+  cameras:
+    - digital cameras
+    - action cameras
+    - camcorders
+    - camera lenses
+    - tripods
+    - camera bags
+    - lighting equipment
+    - drones
+    - camera accessories
+    - memory cards
+  wearables:
+    - smartwatches
+    - fitness trackers
+    - VR headsets
+    - smart glasses
+    - health monitors
+    - heart rate monitors
+    - sleep trackers
+    - GPS watches
+    - Bluetooth earbuds
+    - smart rings
+home_improvement:
+  kitchen:
+    - cookware
+    - kitchen gadgets
+    - kitchen appliances
+    - tableware
+    - food storage
+    - kitchen linens
+    - coffee makers
+    - blenders
+    - knives
+    - dish racks
+  furniture:
+    - living room furniture
+    - bedroom furniture
+    - office furniture
+    - outdoor furniture
+    - storage solutions
+    - home decor
+    - lighting fixtures
+    - mattresses
+    - shelving units
+    - recliners
+  gardening:
+    - garden tools
+    - planters
+    - seeds
+    - fertilizers
+    - pest control
+    - outdoor furniture
+    - lawn care
+    - irrigation systems
+    - garden decor
+    - gardening books
+toys_and_games:
+  educational_toys:
+    - STEM toys
+    - building sets
+    - puzzles
+    - art supplies
+    - science kits
+    - board games
+    - language learning toys
+    - musical instruments
+    - robotics kits
+    - outdoor toys
+  action_figures:
+    - collectible figures
+    - superhero figures
+    - movie characters
+    - anime figures
+    - doll sets
+    - vehicles
+    - playsets
+    - themed toys
+    - plush toys
+    - display stands
+  games:
+    - card games
+    - board games
+    - party games
+    - strategy games
+    - tabletop RPGs
+    - video games
+    - console games
+    - educational games
+    - virtual reality games
+    - escape room games
+clothing_and_accessories:
+  men's_clothing:
+    - t-shirts
+    - jeans
+    - jackets
+    - shorts
+    - activewear
+    - suits
+    - dress shirts
+    - hoodies
+    - accessories
+    - footwear
+  women's_clothing:
+    - dresses
+    - blouses
+    - skirts
+    - leggings
+    - activewear
+    - outerwear
+    - swimwear
+    - accessories
+    - shoes
+    - handbags
+  children's_clothing:
+    - baby clothes
+    - toddler clothing
+    - kids' dresses
+    - boys' clothing
+    - girls' clothing
+    - sleepwear
+    - outerwear
+    - accessories
+    - shoes
+    - uniforms
+sports_and_outdoors:
+  outdoor_gear:
+    - tents
+    - sleeping bags
+    - backpacks
+    - hiking gear
+    - camping equipment
+    - fishing gear
+    - climbing gear
+    - outdoor clothing
+    - binoculars
+    - portable grills
+  fitness:
+    - yoga mats
+    - dumbbells
+    - resistance bands
+    - kettlebells
+    - exercise bikes
+    - treadmills
+    - fitness trackers
+    - sportswear
+    - hydration bottles
+    - jump ropes
+  team_sports:
+    - soccer balls
+    - basketballs
+    - baseball gloves
+    - footballs
+    - volleyballs
+    - protective gear
+    - jerseys
+    - equipment bags
+    - training aids
+    - goals and nets
+health_and_personal_care:
+  personal_care:
+    - skincare
+    - hair care
+    - oral care
+    - grooming tools
+    - bath products
+    - deodorants
+    - perfumes
+    - shaving supplies
+    - sun protection
+    - makeup
+  wellness:
+    - supplements
+    - vitamins
+    - protein powders
+    - herbal teas
+    - essential oils
+    - fitness trackers
+    - yoga accessories
+    - massage tools
+    - sleep aids
+    - relaxation products
+  medical_supplies:
+    - first aid kits
+    - thermometers
+    - blood pressure monitors
+    - mobility aids
+    - home diagnostic kits
+    - wound care products
+    - hearing aids
+    - diabetic supplies
+    - mobility scooters
+    - respiratory equipment
+automotive:
+  car_accessories:
+    - seat covers
+    - car mats
+    - steering wheel covers
+    - organizers
+    - phone mounts
+    - dash cams
+    - jump starters
+    - car cleaning supplies
+    - emergency kits
+    - navigation devices
+  tools_and_equipments:
+    - wrenches
+    - socket sets
+    - tire inflators
+    - battery chargers
+    - mechanic's tool sets
+    - diagnostic tools
+    - lifting equipment
+    - detailing tools
+    - tool organizers
+    - maintenance supplies
+  motorcycle_accessories:
+    - helmets
+    - gloves
+    - jackets
+    - protective gear
+    - saddlebags
+    - maintenance tools
+    - GPS devices
+    - motorcycle covers
+    - riding boots
+    - exhaust systems
+books:
+  fiction:
+    - literary fiction
+    - historical fiction
+    - science fiction
+    - fantasy
+    - romance
+    - mystery
+    - thrillers
+    - young adult fiction
+    - graphic novels
+    - poetry
+  non_fiction:
+    - biographies
+    - self-help
+    - history
+    - health & wellness
+    - business
+    - cookbooks
+    - travel
+    - politics
+    - memoirs
+    - personal finance
+  children's_books:
+    - picture books
+    - early readers
+    - chapter books
+    - middle grade
+    - young adult
+    - educational books
+    - activity books
+    - fairy tales
+    - comics
+    - classic literature
+pets:
+  pet_food:
+    - dog food
+    - cat food
+    - bird food
+    - fish food
+    - small animal food
+    - organic pet food
+    - grain-free pet food
+    - wet food
+    - dry food
+    - treats
+  pet_supplies:
+    - litter boxes
+    - pet beds
+    - collars and leashes
+    - grooming supplies
+    - pet carriers
+    - toys
+    - training pads
+    - pet apparel
+    - aquariums
+    - habitat supplies
+  pet_health:
+    - flea and tick prevention
+    - vitamins and supplements
+    - dental care
+    - grooming tools
+    - medications
+    - pet insurance
+    - first aid supplies
+    - grooming services
+    - nutrition guides
+    - training resources

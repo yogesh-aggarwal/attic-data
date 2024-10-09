@@ -1,0 +1,16 @@
+product_id: string (Product ID, e.g., "P1234")
+
+summary:
+  total_quantity: number (Total stock available, e.g., 100)
+  threshold: number (Reorder threshold for the product, e.g., 10)
+  restock_expected: string (Date when restock is expected, ISO format, e.g., "2024-11-15")
+warehouses:
+  - id: string (Warehouse ID, e.g., "WH1")
+    location: string (Warehouse location, e.g., "Los Angeles, CA")
+    quantity_available: number (Stock available in the warehouse, e.g., 50)
+    threshold: number (Reorder threshold for the warehouse, e.g., 5)
+supplier:
+  id: number (Supplier ID, e.g., 9876)
+  name: string (Supplier's name, e.g., "SoundMaster Suppliers Inc.")
+  lead_time_days: number (Number of days to restock, e.g., 14)
+  reorder_point: number (Stock level when reordering should happen, e.g., 20)
