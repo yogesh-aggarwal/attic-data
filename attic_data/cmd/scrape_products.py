@@ -9,7 +9,7 @@ def _scrape_product(url: str):
     res = requests.get(url, headers=prepare_headers())
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-    logger.info(f"\t\t\t✅ Title: {'title'}")
+    logger.info(f"\t✅ Title: {'title'}")
 
 
 def _scrape_products_from_urls(urls: list[str]):
