@@ -4,12 +4,12 @@ import bs4
 from attic_data.core.logging import logger
 
 
-class ProductPriceScrapper:
+class AmazonProductPriceScrapper:
     soup: bs4.BeautifulSoup
     _value: float | None
 
     @property
-    def price(self):
+    def value(self):
         return self._value
 
     def __init__(self, soup: bs4.BeautifulSoup):

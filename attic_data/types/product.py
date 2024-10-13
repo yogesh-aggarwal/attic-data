@@ -1,27 +1,27 @@
-from typing import List, Optional
-from pydantic import BaseModel, HttpUrl
+from typing import Optional
+from pydantic import BaseModel
 
 
 class ProductMediaImage(BaseModel):
-    url: HttpUrl
-    alt_text: Optional[str]
+    url: str
+    alt_text: str
 
 
 class ProductMediaVideo(BaseModel):
-    url: HttpUrl
-    description: Optional[str]
+    url: str
+    description: str
 
 
 class ProductMedia(BaseModel):
-    images: Optional[List[ProductMediaImage]]
-    videos: Optional[List[ProductMediaVideo]]
+    images: list[ProductMediaImage]
+    videos: list[ProductMediaVideo]
 
 
 class ProductSeo(BaseModel):
     meta_title: str
     meta_description: str
-    meta_keywords: Optional[str]
-    canonical_url: Optional[HttpUrl]
+    meta_keywords: str
+    canonical_url: str
 
 
 class ProductDescription(BaseModel):
@@ -52,7 +52,7 @@ class ProductDetails(BaseModel):
     condition: str
     clearance: bool
     legal: ProductLegal
-    attributes: List[ProductAttributes]
+    attributes: list[ProductAttributes]
 
 
 class ProductReviewsDistribution(BaseModel):
@@ -84,16 +84,16 @@ class ProductListing(BaseModel):
     seo: ProductSeo
     title: str
     description: ProductDescription
-    categories: Optional[dict]
-    tags: Optional[List[str]]
+    categories: dict
+    tags: list[str]
     status: ProductStatus
 
 
 class Product(BaseModel):
-    _id: int
+    _id: str
     metadata: ProductMetadata
-    media: Optional[ProductMedia]
+    media: ProductMedia
     listing: ProductListing
     details: ProductDetails
-    variants: Optional[List[int]]
-    reviews: Optional[ProductReviews]
+    variants: list[int]
+    reviews: ProductReviews
