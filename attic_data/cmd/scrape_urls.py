@@ -9,6 +9,11 @@ from attic_data.core.utils import cd
 
 OUTPUT_DIR = "product_urls"
 
+thread_pool = ThreadPoolExecutor(
+    max_workers=16,
+    thread_name_prefix="amazon-scrapper_urls",
+)
+
 
 def _fetch_max_pages_for_query(query: str):
     url = f"https://www.amazon.in/s?k={query}"
@@ -79,12 +84,8 @@ def _scrape_and_dump_all_pages_for_query(query: str):
 
 def _scrape_product_links_from_queries(queries: list[str]):
     with cd(OUTPUT_DIR):
-        with ThreadPoolExecutor(
-            max_workers=16,
-            thread_name_prefix="amazon-scrapper_urls",
-        ) as pool:
-            for query in queries:
-                pool.submit(_scrape_and_dump_all_pages_for_query, query)
+        for query in queries:
+            thread_pool.submit(_scrape_and_dump_all_pages_for_query, query)
 
 
 def _articulate_urls_in_one_file():

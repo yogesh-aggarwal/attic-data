@@ -14,6 +14,11 @@ from attic_data.types.sink.pipeline import SinkPipeline
 
 os.system("clear")
 
+thread_pool = ThreadPoolExecutor(
+    max_workers=16,
+    thread_name_prefix="amazon-scrapper_product",
+)
+
 db = MongoClient(MONGO_URI)["attic"]
 sink = SinkPipeline(
     [
@@ -26,7 +31,7 @@ sink = SinkPipeline(
         # File system sinks
         SinkPipeline(
             [
-                JSONSink("./data"),
+                # JSONSink("./data"),
                 # FileSink(),
             ]
         ),
@@ -44,29 +49,26 @@ def _scrape_product_from_url(url: str):
         logger.info(f"🆗 Product scraped: {url}")
 
 
-def _scrape_products_from_urls(urls: list[str]):
+def scrape_products_from_urls_file(file_path: str):
     failed_urls = []
+    with cd("data"):
+        with open(file_path, "r") as f:
+            for line in f:
+                url = line.strip()
 
-    with ThreadPoolExecutor(
-        max_workers=16,
-        thread_name_prefix="amazon-scrapper_product",
-    ) as pool:
-        for url in urls:
-            pool.submit(_scrape_product_from_url, url)
+                def _scrape(url: str):
+                    try:
+                        _scrape_product_from_url(url)
+                    except Exception as e:
+                        failed_urls.append(url)
+                        logger.error(f"❌ Failed to scrape product: {e}")
+
+                thread_pool.submit(_scrape, url)
 
     if failed_urls:
         with open("failed_urls.txt", "w+") as f:
             for url in failed_urls:
                 f.write(f"{url}\n")
-
-
-def scrape_products_from_urls_file(file_path: str):
-    with cd("data"):
-        with open(file_path, "r") as f:
-            urls = [url.strip() for url in f.readlines()]
-            urls = urls
-
-        _scrape_products_from_urls(urls)
 
 
 def main():

@@ -89,7 +89,7 @@ def generate_and_articulate_queries():
     }
 
     with cd("data"):
-        # _generate_queries_for_categories(categories)
+        _generate_queries_for_categories(categories)
         _articulate_queries_in_one_file()
 
 

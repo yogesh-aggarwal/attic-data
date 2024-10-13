@@ -10,12 +10,11 @@ from .utils import prepare_headers
 class ProxyProviders:
     @staticmethod
     def fetch_from_proxylist_geonode() -> list[str]:
-        url = "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc"
+        url = "https://proxylist.geonode.com/api/proxy-list?protocols=http&limit=500&page=1&sort_by=lastChecked&sort_type=desc"
         all_proxies = requests.get(url, headers=prepare_headers()).json()["data"]
 
-        parsed_proxies = filter(lambda x: "http" in x["protocols"], all_proxies)
         parsed_proxies = list(
-            map(lambda x: f"http://{x['ip']}:{x['port']}", parsed_proxies)
+            map(lambda x: f"http://{x['ip']}:{x['port']}", all_proxies)
         )
 
         return list(set(parsed_proxies))
@@ -35,7 +34,7 @@ class ProxyProviders:
 
         providers = [
             ProxyProviders.fetch_from_proxylist_geonode,
-            ProxyProviders.fetch_from_proxy_list,
+            # ProxyProviders.fetch_from_proxy_list,
         ]
 
         tries = 5
