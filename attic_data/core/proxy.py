@@ -10,14 +10,20 @@ from .utils import prepare_headers
 class ProxyProviders:
     @staticmethod
     def fetch_from_proxylist_geonode() -> list[str]:
-        url = "https://proxylist.geonode.com/api/proxy-list?protocols=http&limit=500&page=1&sort_by=lastChecked&sort_type=desc"
-        all_proxies = requests.get(url, headers=prepare_headers()).json()["data"]
+        final_proxies = []
+        for i in range(1, 6):
+            url = f"https://proxylist.geonode.com/api/proxy-list?protocols=http&limit=500&page={i}&sort_by=lastChecked&sort_type=desc"
+            all_proxies = requests.get(url, headers=prepare_headers()).json()["data"]
+            if not all_proxies:
+                break
 
-        parsed_proxies = list(
-            map(lambda x: f"http://{x['ip']}:{x['port']}", all_proxies)
-        )
+            parsed_proxies = list(
+                map(lambda x: f"http://{x['ip']}:{x['port']}", all_proxies)
+            )
 
-        return list(set(parsed_proxies))
+            final_proxies.extend(parsed_proxies)
+
+        return list(set(final_proxies))
 
     @staticmethod
     def fetch_from_proxy_list() -> list[str]:
@@ -29,29 +35,34 @@ class ProxyProviders:
         return list(set(parsed_proxies))
 
     @staticmethod
-    def fetch_proxy_list_from_random_provider() -> list[str]:
+    def fetch_from_all_providers() -> list[str]:
         logger.info("🐎 Fetching & caching proxies")
 
         providers = [
             ProxyProviders.fetch_from_proxylist_geonode,
-            # ProxyProviders.fetch_from_proxy_list,
+            ProxyProviders.fetch_from_proxy_list,
         ]
 
-        tries = 5
-        while tries:
-            tries -= 1
+        final_proxies: list[str] = []
+        for provider in providers:
             try:
-                proxies = random.choice(providers)()
-                if proxies and len(proxies) > 5:
-                    logger.info(f"🐑 Fetched {len(proxies)} proxies")
-                    return proxies
+                for _ in range(5):
+                    proxies = provider()
+                    if proxies and len(proxies) > 5:
+                        final_proxies.extend(proxies)
+                        break
             except Exception:
                 pass
 
-        raise Exception("Failed to fetch proxy list from any provider")
+        if len(final_proxies) < 5:
+            raise Exception("Failed to fetch proxies from all providers")
+
+        logger.info(f"🐑 Fetched {len(proxies)} proxies")
+
+        return final_proxies
 
 
-proxies = ProxyProviders.fetch_proxy_list_from_random_provider()
+proxies = ProxyProviders.fetch_from_all_providers()
 proxies_iter = itertools.cycle(proxies)
 
 

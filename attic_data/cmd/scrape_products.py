@@ -12,7 +12,6 @@ from attic_data.types.sink.json import JSONSink
 from attic_data.types.sink.mongo import MongoSink
 from attic_data.types.sink.pipeline import SinkPipeline
 
-os.system("clear")
 
 thread_pool = ThreadPoolExecutor(
     max_workers=THREAD_POOL_MAX_WORKERS,
@@ -72,4 +71,6 @@ def scrape_products_from_urls_file(file_path: str):
 
 
 def main():
+    os.system("clear")
+
     scrape_products_from_urls_file("urls.txt")
