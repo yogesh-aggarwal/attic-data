@@ -7,6 +7,7 @@ import requests
 
 from attic_data.core.logging import logger
 from attic_data.core.utils import cd, prepare_headers
+from attic_data.core.request import make_get_request_with_proxy
 
 
 OUTPUT_DIR = "product_urls"
@@ -14,7 +15,9 @@ OUTPUT_DIR = "product_urls"
 
 def _fetch_max_pages_for_query(query: str):
     url = f"https://www.amazon.in/s?k={query}"
-    res = requests.get(url, headers=prepare_headers())
+    res = make_get_request_with_proxy(url)
+    if res is None:
+        return 1
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
@@ -31,7 +34,9 @@ def _fetch_max_pages_for_query(query: str):
 
 def _fetch_urls(query: str, page: int) -> list[str]:
     url = f"https://www.amazon.in/s?k={query}&page={page}&ref=nb_sb_noss_2"
-    res = requests.get(url, headers=prepare_headers())
+    res = make_get_request_with_proxy(url)
+    if res is None:
+        return []
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
     links = soup.select(

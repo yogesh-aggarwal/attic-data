@@ -1,7 +1,10 @@
+import random
+
 import bs4
 import requests
 
 from attic_data.core.logging import logger
+from attic_data.core.request import make_get_request_with_proxy
 from attic_data.core.utils import logged_try_except, prepare_headers
 from attic_data.scrapers.amazon.product.media import AmazonProductMediascraper
 from attic_data.scrapers.amazon.product.price import AmazonProductPricescraper
@@ -64,10 +67,12 @@ class AmazonProductscraper:
         self._product = product
 
     def _init_soup(self):
+        if self._soup:
+            return
 
-        res = requests.get(self._url, headers=prepare_headers())
-        res.raise_for_status()
-
+        res = make_get_request_with_proxy(self._url)
+        if not res:
+            raise Exception("Failed to fetch product page")
         self._soup = bs4.BeautifulSoup(res.text, "html.parser")
 
     def scrape(self):

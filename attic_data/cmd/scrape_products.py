@@ -1,6 +1,7 @@
 import os
 
 from pymongo import MongoClient
+from concurrent.futures import ThreadPoolExecutor
 
 from attic_data.core.constants import MONGO_URI
 from attic_data.core.logging import logger
@@ -33,17 +34,25 @@ sink = SinkPipeline(
 )
 
 
+def _scrape_product_from_url(url: str):
+    scraper = AmazonProductscraper(url)
+    scraper.scrape()
+    if scraper.has_failed:
+        logger.error(f"❌ Failed to scrape product: {url}")
+    else:
+        scraper.dump(sink)
+        logger.info(f"🆗 Product scraped: {url}")
+
+
 def _scrape_products_from_urls(urls: list[str]):
     failed_urls = []
-    for url in urls:
-        scraper = AmazonProductscraper(url)
-        scraper.scrape()
-        if scraper.has_failed:
-            failed_urls.append(url)
-            logger.error(f"❌ Failed to scrape product: {url}")
-        else:
-            scraper.dump(sink)
-            logger.info(f"🆗 Product scraped: {url}")
+
+    with ThreadPoolExecutor(
+        max_workers=4,
+        thread_name_prefix="amazon-scrapper_product",
+    ) as pool:
+        for url in urls:
+            pool.submit(_scrape_product_from_url, url)
 
     if failed_urls:
         with open("failed_urls.txt", "w+") as f:
@@ -55,7 +64,7 @@ def scrape_products_from_urls_file(file_path: str):
     with cd("data"):
         with open(file_path, "r") as f:
             urls = [url.strip() for url in f.readlines()]
-            urls = urls[0:1]
+            urls = urls[0:5]
 
         _scrape_products_from_urls(urls)
 
