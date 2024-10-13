@@ -1,9 +1,9 @@
 import os
-
-from pymongo import MongoClient
 from concurrent.futures import ThreadPoolExecutor
 
-from attic_data.core.constants import MONGO_URI
+from pymongo import MongoClient
+
+from attic_data.core.constants import MONGO_URI, THREAD_POOL_MAX_WORKERS
 from attic_data.core.logging import logger
 from attic_data.core.utils import cd
 from attic_data.scrapers.amazon.product import AmazonProductscraper
@@ -15,7 +15,7 @@ from attic_data.types.sink.pipeline import SinkPipeline
 os.system("clear")
 
 thread_pool = ThreadPoolExecutor(
-    max_workers=16,
+    max_workers=THREAD_POOL_MAX_WORKERS,
     thread_name_prefix="amazon-scrapper_product",
 )
 

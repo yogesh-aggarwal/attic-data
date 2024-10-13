@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import bs4
 
+from attic_data.core.constants import THREAD_POOL_MAX_WORKERS
 from attic_data.core.logging import logger
 from attic_data.core.request import make_get_request_with_proxy
 from attic_data.core.utils import cd
@@ -10,7 +11,7 @@ from attic_data.core.utils import cd
 OUTPUT_DIR = "product_urls"
 
 thread_pool = ThreadPoolExecutor(
-    max_workers=16,
+    max_workers=THREAD_POOL_MAX_WORKERS,
     thread_name_prefix="amazon-scrapper_urls",
 )
 
