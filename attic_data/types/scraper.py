@@ -63,20 +63,20 @@ class Scraper[T]:
 
 
 class BS4Scraper[T](Scraper[T]):
-    soup: bs4.BeautifulSoup
+    _soup: bs4.BeautifulSoup
 
     def __init__(self, soup: bs4.BeautifulSoup, scrapers: ScraperFnList[T]):
         super().__init__(scrapers)
-        self.soup = soup
+        self._soup = soup
 
     @override
     def find_element(self, selector: str) -> bs4.element.Tag | None:
-        element = self.soup.select(selector)
+        element = self._soup.select(selector)
         return element[0] if element else None
 
     @override
     def find_elements(self, selector: str) -> list[bs4.element.Tag]:
-        return self.soup.select(selector)
+        return self._soup.select(selector)
 
     @override
     def find_element_by_id(self, id_: str) -> bs4.element.Tag | None:

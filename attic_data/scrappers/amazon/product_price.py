@@ -21,17 +21,17 @@ class AmazonProductPriceScrapper(BS4Scraper[float]):
     def _scrape_generic_price(self) -> float | None:
         value: float | None = None
 
-        element = self.soup.select(".a-price")
+        element = self.find_element(".a-price")
         if element:
-            value = self._util_extract_price_from_text(element[0].text)
+            value = self._util_extract_price_from_text(element.text)
 
         return value
 
     def _scrape_kindle_price(self) -> float | None:
         value: float | None = None
 
-        element = self.soup.select("#kindle-price")
+        element = self.find_element("#kindle-price")
         if element:
-            value = self._util_extract_price_from_text(element[0].text)
+            value = self._util_extract_price_from_text(element.text)
 
         return value

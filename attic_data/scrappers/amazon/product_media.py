@@ -16,10 +16,11 @@ class AmazonProductMediaScrapper(BS4Scraper[ProductMedia]):
     def _scrape_kindle_media(self) -> ProductMedia | None:
         media = ProductMedia(images=[], videos=[])
 
-        element = self.soup.select_one("#landingImage")
+        element = self.find_element("#landingImage")
         if element:
             url: str = element.get("src", None)  # type: ignore
             alt_text: str = element.get("alt", None)  # type: ignore
             if url and alt_text:
-                media.images.append(ProductMediaImage(url=url, alt_text=alt_text))
+                image = ProductMediaImage(url=url, alt_text=alt_text)  # type: ignore
+                media.images.append(image)
         return media

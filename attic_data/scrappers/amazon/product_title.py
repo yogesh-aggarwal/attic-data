@@ -10,8 +10,8 @@ class AmazonProductTitleScrapper(BS4Scraper[str]):
     def _scrape_generic_title(self) -> str | None:
         value: str | None = None
 
-        element = self.soup.select("#productTitle")
+        element = self.find_element("#productTitle")
         if element:
-            value = element[0].text.strip()
+            value = element.text.strip()
 
         return value
