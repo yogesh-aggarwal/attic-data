@@ -1,7 +1,6 @@
 import re
-import bs4
 
-from attic_data.core.logging import logger
+import bs4
 
 
 class AmazonProductPriceScrapper:

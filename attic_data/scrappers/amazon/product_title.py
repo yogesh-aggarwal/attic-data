@@ -1,7 +1,4 @@
-import re
 import bs4
-
-from attic_data.core.logging import logger
 
 
 class AmazonProductTitleScrapper:

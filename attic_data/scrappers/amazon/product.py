@@ -1,12 +1,12 @@
-import requests
 import bs4
+import requests
 
 from attic_data.core.logging import logger
 from attic_data.core.utils import prepare_headers
-from attic_data.types.product import ProductMedia
 from attic_data.scrappers.amazon.product_media import AmazonProductMediaScrapper
 from attic_data.scrappers.amazon.product_price import AmazonProductPriceScrapper
 from attic_data.scrappers.amazon.product_title import AmazonProductTitleScrapper
+from attic_data.types.product import ProductMedia
 
 
 class AmazonProductScrapper:

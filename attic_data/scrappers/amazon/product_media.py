@@ -1,7 +1,5 @@
-import re
 import bs4
 
-from attic_data.core.logging import logger
 from attic_data.types.product import ProductMedia, ProductMediaImage, ProductMediaVideo
 
 
