@@ -1,6 +1,7 @@
 import contextlib
 import os
 import time
+from typing import Callable
 
 import nanoid
 import requests
@@ -15,6 +16,22 @@ def generate_id() -> str:
 
 def get_timestamp() -> int:
     return int(time.time()) * 1000
+
+
+def with_retry(tries: int):
+    def decorator(func: Callable):
+        def wrapper(*args, **kwargs):
+            for _ in range(tries):
+                try:
+                    return func(*args, **kwargs)
+                except:
+                    pass
+
+            raise Exception("Failed to execute")
+
+        return wrapper
+
+    return decorator
 
 
 @contextlib.contextmanager

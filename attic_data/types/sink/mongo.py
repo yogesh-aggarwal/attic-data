@@ -2,6 +2,8 @@ from typing import Any, override
 
 from pymongo.database import Database
 
+from attic_data.core.utils import with_retry
+
 from . import Sink
 
 
@@ -13,6 +15,7 @@ class MongoSink(Sink):
         self.db = db
 
     @override
+    @with_retry(3)
     def dump_to_location(self, doc_path: str, data: dict[str, Any]):
         segments = doc_path.split("/")
         if len(segments) != 2:

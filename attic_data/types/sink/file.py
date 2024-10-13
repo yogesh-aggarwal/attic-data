@@ -1,6 +1,8 @@
 import os
 from typing import Any, override
 
+from attic_data.core.utils import with_retry
+
 from . import Sink
 
 
@@ -12,6 +14,7 @@ class FileSink(Sink):
         self.base_path = os.path.join(os.getcwd(), base_path)
 
     @override
+    @with_retry(3)
     def dump_to_location(self, file_path: str, data: Any):
         # Ensure the file path is absolute
         file_path = os.path.join(self.base_path, file_path)

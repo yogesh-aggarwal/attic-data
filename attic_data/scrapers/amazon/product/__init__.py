@@ -37,11 +37,11 @@ class AmazonProductscraper:
     def _articulate(self) -> Product:
         # Extracting product details
         title = title = AmazonProductTitlescraper(self.soup).scrape().value
-        logger.info(f"\t✅ Title: {title}")
+        logger.info(f"    ✅ Title: {title}")
         price = AmazonProductPricescraper(self.soup).scrape().value
-        logger.info(f"\t✅ Price: {price}")
+        logger.info(f"    ✅ Price: {price}")
         media = AmazonProductMediascraper(self.soup).scrape().value
-        logger.info(f"\t✅ Media: {media}")
+        logger.info(f"    ✅ Media: {media}")
 
         product = Product.with_empty_values(self.url.split("/")[3])
 
@@ -80,4 +80,4 @@ class AmazonProductscraper:
         logger.info(f"📦 Dumping product to sink ({self._product.id})")
 
         path = f"products/{self._product.id}"
-        sink.dump_to_location(path, self._product.model_dump())
+        sink.dump_to_location_safe(path, self._product.model_dump())
