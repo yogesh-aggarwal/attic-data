@@ -9,14 +9,20 @@ ScraperFnList = list[ScraperFn[T]]
 
 class Scraper[T]:
     _value: T | None
+    _has_failed: bool
     _scrapers: ScraperFnList[T]
 
     @property
     def value(self):
         return self._value
 
+    @property
+    def has_failed(self):
+        return self._has_failed
+
     def __init__(self, scrapers: ScraperFnList[T]):
         self._value = None
+        self._has_failed = False
         self._scrapers = scrapers
 
     def scrape(self):
@@ -25,6 +31,9 @@ class Scraper[T]:
             if value:
                 self._value = value
                 break
+        self._has_failed = value is None
+
+        return self
 
     def find_element(self, selector: str) -> Any:
         raise NotImplementedError(

@@ -1,8 +1,20 @@
-import os
-import requests
 import contextlib
+import os
+import time
 
+import nanoid
+import requests
 from fake_useragent import UserAgent
+
+from attic_data.core.logging import logger
+
+
+def generate_id() -> str:
+    return nanoid.generate()
+
+
+def get_timestamp() -> int:
+    return int(time.time()) * 1000
 
 
 @contextlib.contextmanager
@@ -11,7 +23,16 @@ def cd(path: str):
         os.makedirs(path, exist_ok=True)
         yield os.chdir(path)
     finally:
-        os.chdir("..")
+        if path != ".":
+            os.chdir("..")
+
+
+@contextlib.contextmanager
+def logged_try_except(name: str = "default"):
+    try:
+        yield
+    except Exception as e:
+        logger.getChild(name).error(f"Error: {e}")
 
 
 def prepare_headers():

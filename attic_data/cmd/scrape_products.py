@@ -1,10 +1,7 @@
 import os
-import bs4
-import requests
-import re
 
 from attic_data.core.logging import logger
-from attic_data.core.utils import cd, prepare_headers
+from attic_data.core.utils import cd
 from attic_data.scrappers.amazon.product import AmazonProductScrapper
 
 
@@ -15,6 +12,8 @@ def _scrape_products_from_urls(urls: list[str]):
         scrapper.scrape()
         if scrapper.has_failed:
             failed_urls.append(url)
+        else:
+            logger.info(f"🆗 Product scraped: {url}")
 
     if failed_urls:
         with open("failed_urls.txt", "w") as f:

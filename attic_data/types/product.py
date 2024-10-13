@@ -1,127 +1,182 @@
 from typing import Optional
+
 from pydantic import BaseModel, ConfigDict, Field
+
+from attic_data.core.utils import generate_id, get_timestamp
 
 
 class ProductMediaImage(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    url: str = Field(..., alias="url")
-    alt_text: str = Field(..., alias="altText")
+    url: str = Field(...)
+    alt_text: str = Field(...)
 
 
 class ProductMediaVideo(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    url: str = Field(..., alias="url")
-    description: str = Field(..., alias="description")
+    url: str = Field(...)
+    description: str = Field(...)
 
 
 class ProductMedia(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    images: list[ProductMediaImage] = Field(..., alias="images")
-    videos: list[ProductMediaVideo] = Field(..., alias="videos")
+    images: list[ProductMediaImage] = Field(...)
+    videos: list[ProductMediaVideo] = Field(...)
 
 
 class ProductSeo(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    meta_title: str = Field(..., alias="metaTitle")
-    meta_description: str = Field(..., alias="metaDescription")
-    meta_keywords: str = Field(..., alias="metaKeywords")
-    canonical_url: str = Field(..., alias="canonicalUrl")
+    meta_title: str = Field(...)
+    meta_description: str = Field(...)
+    meta_keywords: str = Field(...)
+    canonical_url: str = Field(...)
 
 
 class ProductDescription(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    short: str = Field(..., alias="short")
-    long: str = Field(..., alias="long")
+    short: str = Field(...)
+    long: str = Field(...)
 
 
 class ProductStatus(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    availability: str = Field(..., alias="availability")
-    lifecycle: str = Field(..., alias="lifecycle")
-    featured: bool = Field(..., alias="featured")
-    on_sale: bool = Field(..., alias="onSale")
+    availability: str = Field(...)
+    lifecycle: str = Field(...)
+    featured: bool = Field(...)
+    on_sale: bool = Field(...)
 
 
 class ProductAttributes(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    name: str = Field(..., alias="name")
-    value: str = Field(..., alias="value")
+    name: str = Field(...)
+    value: str = Field(...)
 
 
 class ProductLegal(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    warranty_info: str = Field(..., alias="warrantyInfo")
-    return_policy: str = Field(..., alias="returnPolicy")
+    warranty_info: str = Field(...)
+    return_policy: str = Field(...)
 
 
 class ProductDetails(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    brand: str = Field(..., alias="brand")
-    model: str = Field(..., alias="model")
-    condition: str = Field(..., alias="condition")
-    clearance: bool = Field(..., alias="clearance")
-    legal: ProductLegal = Field(..., alias="legal")
-    attributes: list[ProductAttributes] = Field(..., alias="attributes")
+    brand: str = Field(...)
+    model: str = Field(...)
+    condition: str = Field(...)
+    clearance: bool = Field(...)
+    legal: ProductLegal = Field(...)
+    attributes: list[ProductAttributes] = Field(...)
 
 
 class ProductReviewsDistribution(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    five: int = Field(..., alias="five")
-    four: int = Field(..., alias="four")
-    three: int = Field(..., alias="three")
-    two: int = Field(..., alias="two")
-    one: int = Field(..., alias="one")
+    five: int = Field(...)
+    four: int = Field(...)
+    three: int = Field(...)
+    two: int = Field(...)
+    one: int = Field(...)
 
 
 class ProductReviews(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    total_count: int = Field(..., alias="totalCount")
-    average_rating: float = Field(..., alias="averageRating")
-    star_distribution: ProductReviewsDistribution = Field(..., alias="starDistribution")
+    total_count: int = Field(...)
+    average_rating: float = Field(...)
+    star_distribution: ProductReviewsDistribution = Field(...)
 
 
 class ProductMetadata(BaseModel):
-    model_config = ConfigDict(populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=False)
 
-    created_at: int = Field(..., alias="createdAt")
-    updated_at: int = Field(..., alias="updatedAt")
-    published_at: Optional[int] = Field(None, alias="publishedAt")
-    unpublished_at: Optional[int] = Field(None, alias="unpublishedAt")
-    reviewed_at: Optional[int] = Field(None, alias="reviewedAt")
-    released_at: Optional[int] = Field(None, alias="releasedAt")
-    expiration_date: Optional[int] = Field(None, alias="expirationDate")
+    created_at: int = Field(...)
+    updated_at: int = Field(...)
+    published_at: Optional[int] = Field(None)
+    unpublished_at: Optional[int] = Field(None)
+    reviewed_at: Optional[int] = Field(None)
+    released_at: Optional[int] = Field(None)
+    expiration_date: Optional[int] = Field(None)
 
 
 class ProductListing(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    sku: str = Field(..., alias="sku")
-    seo: ProductSeo = Field(..., alias="seo")
-    title: str = Field(..., alias="title")
-    description: ProductDescription = Field(..., alias="description")
-    categories: dict = Field(..., alias="categories")
-    tags: list[str] = Field(..., alias="tags")
-    status: ProductStatus = Field(..., alias="status")
+    sku: str = Field(...)
+    seo: ProductSeo = Field(...)
+    title: str = Field(...)
+    description: ProductDescription = Field(...)
+    categories: dict = Field(...)
+    tags: list[str] = Field(...)
+    status: ProductStatus = Field(...)
 
 
 class Product(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    id: str = Field(..., alias="_id")
-    metadata: ProductMetadata = Field(..., alias="metadata")
-    media: ProductMedia = Field(..., alias="media")
-    listing: ProductListing = Field(..., alias="listing")
-    details: ProductDetails = Field(..., alias="details")
-    variants: list[int] = Field(..., alias="variants")
-    reviews: ProductReviews = Field(..., alias="reviews")
+    id: str = Field(...)
+    metadata: ProductMetadata = Field(...)
+    media: ProductMedia = Field(...)
+    listing: ProductListing = Field(...)
+    details: ProductDetails = Field(...)
+    variants: list[int] = Field(...)
+    reviews: ProductReviews = Field(...)
+
+    @staticmethod
+    def with_empty_values():
+        return Product(
+            id=generate_id(),
+            metadata=ProductMetadata(
+                created_at=get_timestamp(),
+                updated_at=get_timestamp(),
+                published_at=None,
+                unpublished_at=None,
+                reviewed_at=None,
+                released_at=None,
+                expiration_date=None,
+            ),
+            media=ProductMedia(images=[], videos=[]),
+            listing=ProductListing(
+                sku="",
+                seo=ProductSeo(
+                    meta_title="",
+                    meta_description="",
+                    meta_keywords="",
+                    canonical_url="",
+                ),
+                title="",
+                description=ProductDescription(short="", long=""),
+                categories={},
+                tags=[],
+                status=ProductStatus(
+                    availability="", lifecycle="", featured=False, on_sale=False
+                ),
+            ),
+            details=ProductDetails(
+                brand="",
+                model="",
+                condition="",
+                clearance=False,
+                legal=ProductLegal(warranty_info="", return_policy=""),
+                attributes=[],
+            ),
+            variants=[],
+            reviews=ProductReviews(
+                total_count=0,
+                average_rating=0.0,
+                star_distribution=ProductReviewsDistribution(
+                    five=0,
+                    four=0,
+                    three=0,
+                    two=0,
+                    one=0,
+                ),
+            ),
+        )
