@@ -4,7 +4,7 @@ from attic_data.types.product import ProductMedia, ProductMediaImage, ProductMed
 from attic_data.types.scraper import BS4Scraper
 
 
-class AmazonProductMediaScrapper(BS4Scraper[ProductMedia]):
+class AmazonProductMediascraper(BS4Scraper[ProductMedia]):
     def __init__(self, soup: bs4.BeautifulSoup):
         super().__init__(soup, [self._scrape_generic_media, self._scrape_kindle_media])
 

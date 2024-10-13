@@ -3,14 +3,14 @@ import requests
 
 from attic_data.core.logging import logger
 from attic_data.core.utils import logged_try_except, prepare_headers
-from attic_data.scrappers.amazon.product.media import AmazonProductMediaScrapper
-from attic_data.scrappers.amazon.product.price import AmazonProductPriceScrapper
-from attic_data.scrappers.amazon.product.title import AmazonProductTitleScrapper
+from attic_data.scrapers.amazon.product.media import AmazonProductMediascraper
+from attic_data.scrapers.amazon.product.price import AmazonProductPricescraper
+from attic_data.scrapers.amazon.product.title import AmazonProductTitlescraper
 from attic_data.types.product import *
 from attic_data.types.sink import Sink
 
 
-class AmazonProductScrapper:
+class AmazonProductscraper:
     _url: str
     _has_failed: bool
     _soup: bs4.BeautifulSoup | None
@@ -36,11 +36,11 @@ class AmazonProductScrapper:
 
     def _articulate(self) -> Product:
         # Extracting product details
-        title = title = AmazonProductTitleScrapper(self.soup).scrape().value
+        title = title = AmazonProductTitlescraper(self.soup).scrape().value
         logger.info(f"\t✅ Title: {title}")
-        price = AmazonProductPriceScrapper(self.soup).scrape().value
+        price = AmazonProductPricescraper(self.soup).scrape().value
         logger.info(f"\t✅ Price: {price}")
-        media = AmazonProductMediaScrapper(self.soup).scrape().value
+        media = AmazonProductMediascraper(self.soup).scrape().value
         logger.info(f"\t✅ Media: {media}")
 
         product = Product.with_empty_values(self.url.split("/")[3])
@@ -62,7 +62,7 @@ class AmazonProductScrapper:
 
     def scrape(self):
         self._has_failed = True
-        with logged_try_except("🕸️ amazon_product_scrapper"):
+        with logged_try_except("🕸️ amazon_product_scraper"):
             res = requests.get(self._url, headers=prepare_headers())
             res.raise_for_status()
 

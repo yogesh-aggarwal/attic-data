@@ -3,7 +3,7 @@ import bs4
 from attic_data.types.scraper import BS4Scraper
 
 
-class AmazonProductTitleScrapper(BS4Scraper[str]):
+class AmazonProductTitlescraper(BS4Scraper[str]):
     def __init__(self, soup: bs4.BeautifulSoup):
         super().__init__(soup, [self._scrape_generic_title])
 

@@ -4,7 +4,7 @@ from pymongo import MongoClient
 
 from attic_data.core.logging import logger
 from attic_data.core.utils import cd
-from attic_data.scrappers.amazon.product import AmazonProductScrapper
+from attic_data.scrapers.amazon.product import AmazonProductscraper
 from attic_data.types.sink.mongo import MongoSink
 from attic_data.core.constants import MONGO_URI
 
@@ -16,12 +16,12 @@ def _scrape_products_from_urls(urls: list[str]):
 
     failed_urls = []
     for url in urls:
-        scrapper = AmazonProductScrapper(url)
-        scrapper.scrape()
-        if scrapper.has_failed:
+        scraper = AmazonProductscraper(url)
+        scraper.scrape()
+        if scraper.has_failed:
             failed_urls.append(url)
         else:
-            scrapper.dump(sink)
+            scraper.dump(sink)
             logger.info(f"🆗 Product scraped: {url}")
 
     if failed_urls:

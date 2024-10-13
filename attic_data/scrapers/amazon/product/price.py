@@ -5,7 +5,7 @@ import bs4
 from attic_data.types.scraper import BS4Scraper
 
 
-class AmazonProductPriceScrapper(BS4Scraper[float]):
+class AmazonProductPricescraper(BS4Scraper[float]):
     def __init__(self, soup: bs4.BeautifulSoup):
         super().__init__(soup, [self._scrape_generic_price, self._scrape_kindle_price])
 
