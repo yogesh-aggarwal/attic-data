@@ -14,5 +14,11 @@ class MongoSink(Sink):
 
     @override
     def dump_to_location(self, doc_path: str, data: dict[str, Any]):
-        collection, doc_id = doc_path.split("/")
+        segments = doc_path.split("/")
+        if len(segments) != 2:
+            raise ValueError(
+                f"Invalid document path: {doc_path}. Must be in the form of 'collection/doc_id'.",
+            )
+
+        collection, doc_id = segments
         self.db[collection].replace_one({"_id": doc_id}, data, upsert=True)

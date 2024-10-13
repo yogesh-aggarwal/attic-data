@@ -61,6 +61,8 @@ class AmazonProductscraper:
         return product
 
     def scrape(self):
+        logger.info(f"🔍 Scraping product ({self._url})")
+
         self._has_failed = True
         with logged_try_except("amazon_product_scraper"):
             res = requests.get(self._url, headers=prepare_headers())
