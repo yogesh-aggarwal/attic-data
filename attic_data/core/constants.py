@@ -6,7 +6,7 @@ load_dotenv()
 
 # Runtime constants
 
-THREAD_POOL_MAX_WORKERS = 32
+THREAD_POOL_MAX_WORKERS = 16
 
 # Environment variables
 

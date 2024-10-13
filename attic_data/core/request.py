@@ -5,7 +5,9 @@ from .utils import prepare_headers
 from .proxy import get_proxy_ip
 
 
-def make_get_request_with_proxy(url: str, n_tries: int = 9) -> requests.Response | None:
+def make_get_request_with_proxy(
+    url: str, n_tries: int = 25
+) -> requests.Response | None:
     for _ in range(n_tries):
         try:
             proxy = next(get_proxy_ip())
