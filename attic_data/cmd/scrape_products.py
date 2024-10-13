@@ -2,14 +2,16 @@ import os
 
 from pymongo import MongoClient
 
+from attic_data.core.constants import MONGO_URI
 from attic_data.core.logging import logger
 from attic_data.core.utils import cd
 from attic_data.scrapers.amazon.product import AmazonProductscraper
-from attic_data.types.sink.mongo import MongoSink
 from attic_data.types.sink.file import FileSink
 from attic_data.types.sink.json import JSONSink
+from attic_data.types.sink.mongo import MongoSink
 from attic_data.types.sink.pipeline import SinkPipeline
-from attic_data.core.constants import MONGO_URI
+
+os.system("clear")
 
 db = MongoClient(MONGO_URI)["attic"]
 sink = SinkPipeline(
@@ -23,7 +25,7 @@ sink = SinkPipeline(
         # File system sinks
         SinkPipeline(
             [
-                JSONSink(),
+                JSONSink("./data/"),
                 # FileSink(),
             ]
         ),
@@ -38,6 +40,7 @@ def _scrape_products_from_urls(urls: list[str]):
         scraper.scrape()
         if scraper.has_failed:
             failed_urls.append(url)
+            logger.error(f"❌ Failed to scrape product: {url}")
         else:
             scraper.dump(sink)
             logger.info(f"🆗 Product scraped: {url}")
@@ -58,5 +61,4 @@ def scrape_products_from_urls_file(file_path: str):
 
 
 def main():
-    os.system("clear")
     scrape_products_from_urls_file("urls.txt")

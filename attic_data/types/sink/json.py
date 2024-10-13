@@ -5,8 +5,8 @@ from .file import FileSink
 
 
 class JSONSink(FileSink):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, base_path: str = "./"):
+        super().__init__(base_path)
 
     @override
     def dump_to_location(self, file_path: str, data: dict[str, Any]):
