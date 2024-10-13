@@ -72,7 +72,7 @@ def _scrape_product_links_from_queries(queries: list[str]):
         for i, query in enumerate(queries):
             logger.info(f"Fetching URLs for query {i + 1}/{len(queries)}: {query}")
             urls = _fetch_all_pages_for_query(query)
-            with open(f"{query}.txt", "w") as f:
+            with open(f"{query}.txt", "w+") as f:
                 f.write("\n".join(urls))
 
             sleep_time = random.uniform(3, 5)
@@ -104,8 +104,10 @@ def _articulate_urls_in_one_file():
     # Remove duplicates
     urls = list(set(urls))
 
-    with open("urls.txt", "w") as f:
+    with open("urls.txt", "w+") as f:
         f.write("\n".join(urls))
+
+    logger.info(f"📦 {len(urls)} URLs dumped to urls.txt")
 
 
 def scrape_product_links_from_queries_file(file_path: str):
@@ -117,4 +119,8 @@ def scrape_product_links_from_queries_file(file_path: str):
 
 
 def main():
+    os.system("clear")
+
+    with cd("data"):
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
     scrape_product_links_from_queries_file("queries.txt")

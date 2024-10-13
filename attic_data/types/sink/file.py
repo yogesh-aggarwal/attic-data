@@ -26,5 +26,5 @@ class FileSink(Sink):
         serialized_data = str(data)
 
         # Write the data to the file
-        with open(file_path, "w") as f:
+        with open(file_path, "w+") as f:
             f.write(serialized_data)

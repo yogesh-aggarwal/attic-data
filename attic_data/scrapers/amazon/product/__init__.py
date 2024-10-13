@@ -34,13 +34,16 @@ class AmazonProductscraper:
     def product(self):
         return self._product
 
-    def _articulate(self) -> Product:
+    def _articulate(self):
+        if not self._soup:
+            raise Exception("Soup not initialized")
+
         # Extracting product details
-        title = title = AmazonProductTitlescraper(self.soup).scrape().value
+        title = title = AmazonProductTitlescraper(self._soup).scrape().value
         logger.info(f"    ✅ Title: {title}")
-        price = AmazonProductPricescraper(self.soup).scrape().value
+        price = AmazonProductPricescraper(self._soup).scrape().value
         logger.info(f"    ✅ Price: {price}")
-        media = AmazonProductMediascraper(self.soup).scrape().value
+        media = AmazonProductMediascraper(self._soup).scrape().value
         logger.info(f"    ✅ Media: {media}")
 
         product = Product.with_empty_values(self.url.split("/")[3])
@@ -58,19 +61,22 @@ class AmazonProductscraper:
         # --- Variants
         # --- Reviews
 
-        return product
+        self._product = product
+
+    def _init_soup(self):
+
+        res = requests.get(self._url, headers=prepare_headers())
+        res.raise_for_status()
+
+        self._soup = bs4.BeautifulSoup(res.text, "html.parser")
 
     def scrape(self):
-        logger.info(f"🔍 Scraping product ({self._url})")
+        logger.info(f"📡 Fetching product ({self._url})")
 
         self._has_failed = True
         with logged_try_except("amazon_product_scraper"):
-            res = requests.get(self._url, headers=prepare_headers())
-            res.raise_for_status()
-
-            self.soup = bs4.BeautifulSoup(res.text, "html.parser")
-
-            self._product = self._articulate()
+            self._init_soup()
+            self._articulate()
         self._has_failed = False
 
     def dump(self, sink: Sink):

@@ -46,7 +46,7 @@ def _scrape_products_from_urls(urls: list[str]):
             logger.info(f"🆗 Product scraped: {url}")
 
     if failed_urls:
-        with open("failed_urls.txt", "w") as f:
+        with open("failed_urls.txt", "w+") as f:
             for url in failed_urls:
                 f.write(f"{url}\n")
 
