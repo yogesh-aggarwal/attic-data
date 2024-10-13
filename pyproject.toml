@@ -17,6 +17,8 @@ fake-useragent = "^1.5.1"
 pydantic = "^2.9.2"
 nanoid = "^2.0.0"
 faker = "^30.3.0"
+pymongo = "^4.10.1"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.scripts]
 scrape_urls = "attic_data.cmd.scrape_urls:main"

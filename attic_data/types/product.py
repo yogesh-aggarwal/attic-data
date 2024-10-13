@@ -121,7 +121,7 @@ class ProductListing(BaseModel):
 class Product(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    id: str = Field(...)
+    id: str = Field(..., alias="_id", default_factory=generate_id)
     metadata: ProductMetadata = Field(...)
     media: ProductMedia = Field(...)
     listing: ProductListing = Field(...)
@@ -130,9 +130,9 @@ class Product(BaseModel):
     reviews: ProductReviews = Field(...)
 
     @staticmethod
-    def with_empty_values():
+    def with_empty_values(id: str = "") -> "Product":
         return Product(
-            id=generate_id(),
+            _id=id or generate_id(),
             metadata=ProductMetadata(
                 created_at=get_timestamp(),
                 updated_at=get_timestamp(),

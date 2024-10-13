@@ -1,11 +1,19 @@
 import os
 
+from pymongo import MongoClient
+
 from attic_data.core.logging import logger
 from attic_data.core.utils import cd
 from attic_data.scrappers.amazon.product import AmazonProductScrapper
+from attic_data.types.sink.mongo import MongoSink
+from attic_data.core.constants import MONGO_URI
+
+db = MongoClient(MONGO_URI)["attic"]
 
 
 def _scrape_products_from_urls(urls: list[str]):
+    sink = MongoSink(db)
+
     failed_urls = []
     for url in urls:
         scrapper = AmazonProductScrapper(url)
@@ -13,6 +21,7 @@ def _scrape_products_from_urls(urls: list[str]):
         if scrapper.has_failed:
             failed_urls.append(url)
         else:
+            scrapper.dump(sink)
             logger.info(f"🆗 Product scraped: {url}")
 
     if failed_urls:

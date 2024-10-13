@@ -2,11 +2,12 @@ import bs4
 import requests
 
 from attic_data.core.logging import logger
-from attic_data.core.utils import prepare_headers, logged_try_except
+from attic_data.core.utils import logged_try_except, prepare_headers
 from attic_data.scrappers.amazon.product.media import AmazonProductMediaScrapper
 from attic_data.scrappers.amazon.product.price import AmazonProductPriceScrapper
 from attic_data.scrappers.amazon.product.title import AmazonProductTitleScrapper
 from attic_data.types.product import *
+from attic_data.types.sink import Sink
 
 
 class AmazonProductScrapper:
@@ -42,13 +43,14 @@ class AmazonProductScrapper:
         media = AmazonProductMediaScrapper(self.soup).scrape().value
         logger.info(f"\t✅ Media: {media}")
 
-        product = Product.with_empty_values()
+        product = Product.with_empty_values(self.url.split("/")[3])
 
         # --- Media
         if media:
             product.media = media
 
         # --- Listing
+        product.listing.sku = generate_id()
         product.listing.title = title or ""
         product.listing.seo.meta_title = title or ""
 
@@ -68,3 +70,10 @@ class AmazonProductScrapper:
 
             self._product = self._articulate()
         self._has_failed = False
+
+    def dump(self, sink: Sink):
+        if not self._product:
+            raise Exception("Product not scraped yet")
+
+        path = f"products/{self._product.id}"
+        sink.dump_to_location(path, self._product.model_dump())
