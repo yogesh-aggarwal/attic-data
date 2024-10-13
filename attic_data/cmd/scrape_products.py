@@ -6,14 +6,32 @@ from attic_data.core.logging import logger
 from attic_data.core.utils import cd
 from attic_data.scrapers.amazon.product import AmazonProductscraper
 from attic_data.types.sink.mongo import MongoSink
+from attic_data.types.sink.file import FileSink
+from attic_data.types.sink.json import JSONSink
+from attic_data.types.sink.pipeline import SinkPipeline
 from attic_data.core.constants import MONGO_URI
 
 db = MongoClient(MONGO_URI)["attic"]
+sink = SinkPipeline(
+    [
+        # Database sinks
+        SinkPipeline(
+            [
+                MongoSink(db),
+            ]
+        ),
+        # File system sinks
+        SinkPipeline(
+            [
+                JSONSink(),
+                # FileSink(),
+            ]
+        ),
+    ]
+)
 
 
 def _scrape_products_from_urls(urls: list[str]):
-    sink = MongoSink(db)
-
     failed_urls = []
     for url in urls:
         scraper = AmazonProductscraper(url)
