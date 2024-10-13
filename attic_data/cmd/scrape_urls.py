@@ -1,14 +1,11 @@
 import os
-import random
-import time
+from concurrent.futures import ThreadPoolExecutor
 
 import bs4
-import requests
 
 from attic_data.core.logging import logger
-from attic_data.core.utils import cd, prepare_headers
 from attic_data.core.request import make_get_request_with_proxy
-
+from attic_data.core.utils import cd
 
 OUTPUT_DIR = "product_urls"
 
@@ -72,17 +69,22 @@ def _fetch_all_pages_for_query(query: str):
     return urls
 
 
+def _scrape_and_dump_all_pages_for_query(query: str):
+    urls = _fetch_all_pages_for_query(query)
+    with open(f"{query}.txt", "w+") as f:
+        f.write("\n".join(urls))
+
+    logger.info(f"📦 {len(urls)} URLs dumped to {query}.txt")
+
+
 def _scrape_product_links_from_queries(queries: list[str]):
     with cd(OUTPUT_DIR):
-        for i, query in enumerate(queries):
-            logger.info(f"Fetching URLs for query {i + 1}/{len(queries)}: {query}")
-            urls = _fetch_all_pages_for_query(query)
-            with open(f"{query}.txt", "w+") as f:
-                f.write("\n".join(urls))
-
-            sleep_time = random.uniform(3, 5)
-            logger.info(f"\tSleeping for {sleep_time} seconds")
-            time.sleep(sleep_time)
+        with ThreadPoolExecutor(
+            max_workers=16,
+            thread_name_prefix="amazon-scrapper_urls",
+        ) as pool:
+            for query in queries:
+                pool.submit(_scrape_and_dump_all_pages_for_query, query)
 
 
 def _articulate_urls_in_one_file():

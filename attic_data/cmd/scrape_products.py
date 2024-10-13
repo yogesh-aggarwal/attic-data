@@ -48,7 +48,7 @@ def _scrape_products_from_urls(urls: list[str]):
     failed_urls = []
 
     with ThreadPoolExecutor(
-        max_workers=4,
+        max_workers=16,
         thread_name_prefix="amazon-scrapper_product",
     ) as pool:
         for url in urls:
@@ -64,7 +64,7 @@ def scrape_products_from_urls_file(file_path: str):
     with cd("data"):
         with open(file_path, "r") as f:
             urls = [url.strip() for url in f.readlines()]
-            urls = urls[0:5]
+            urls = urls
 
         _scrape_products_from_urls(urls)
 
