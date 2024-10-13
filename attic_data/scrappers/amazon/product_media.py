@@ -1,19 +1,12 @@
 import bs4
 
 from attic_data.types.product import ProductMedia, ProductMediaImage, ProductMediaVideo
+from attic_data.types.scraper import BS4Scraper
 
 
-class AmazonProductMediaScrapper:
-    soup: bs4.BeautifulSoup
-    _value: ProductMedia | None
-
-    @property
-    def value(self):
-        return self._value
-
+class AmazonProductMediaScrapper(BS4Scraper[ProductMedia]):
     def __init__(self, soup: bs4.BeautifulSoup):
-        self.soup = soup
-        self._value = None
+        super().__init__(soup, [self._scrape_generic_media, self._scrape_kindle_media])
 
     def _scrape_generic_media(self) -> ProductMedia | None:
         media = ProductMedia(images=[], videos=[])
@@ -30,11 +23,3 @@ class AmazonProductMediaScrapper:
             if url and alt_text:
                 media.images.append(ProductMediaImage(url=url, alt_text=alt_text))
         return media
-
-    def scrape(self):
-        scrapers = [self._scrape_generic_media, self._scrape_kindle_media]
-        for scraper in scrapers:
-            value = scraper()
-            if value is not None:
-                self._value = value
-                break

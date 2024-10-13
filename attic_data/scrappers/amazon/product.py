@@ -27,21 +27,21 @@ class AmazonProductScrapper:
         return self._has_failed
 
     def _scrape_title(self) -> str | None:
-        scrapper = AmazonProductTitleScrapper(self._soup)
+        scrapper = AmazonProductTitleScrapper(self.soup)
         scrapper.scrape()
 
         logger.info(f"\t✅ Title: {scrapper.value}")
         return scrapper.value
 
     def _scrape_price(self) -> float | None:
-        scrapper = AmazonProductPriceScrapper(self._soup)
+        scrapper = AmazonProductPriceScrapper(self.soup)
         scrapper.scrape()
 
         logger.info(f"\t✅ Price: {scrapper.value}")
         return scrapper.value
 
     def _scrape_media(self) -> ProductMedia | None:
-        scrapper = AmazonProductMediaScrapper(self._soup)
+        scrapper = AmazonProductMediaScrapper(self.soup)
         scrapper.scrape()
 
         logger.info(f"\t✅ Media: {scrapper.value}")
@@ -49,7 +49,7 @@ class AmazonProductScrapper:
 
     def scrape(self):
         res = requests.get(self._url, headers=prepare_headers())
-        self._soup = bs4.BeautifulSoup(res.text, "html.parser")
+        self.soup = bs4.BeautifulSoup(res.text, "html.parser")
 
         try:
             title = self._scrape_title()

@@ -2,18 +2,12 @@ import re
 
 import bs4
 
+from attic_data.types.scraper import BS4Scraper
 
-class AmazonProductPriceScrapper:
-    soup: bs4.BeautifulSoup
-    _value: float | None
 
-    @property
-    def value(self):
-        return self._value
-
+class AmazonProductPriceScrapper(BS4Scraper[float]):
     def __init__(self, soup: bs4.BeautifulSoup):
-        self.soup = soup
-        self._value = None
+        super().__init__(soup, [self._scrape_generic_price, self._scrape_kindle_price])
 
     def _util_extract_price_from_text(self, text: str) -> float | None:
         value: float | None = None
@@ -41,11 +35,3 @@ class AmazonProductPriceScrapper:
             value = self._util_extract_price_from_text(element[0].text)
 
         return value
-
-    def scrape(self):
-        scrapers = [self._scrape_generic_price, self._scrape_kindle_price]
-        for scraper in scrapers:
-            value = scraper()
-            if value is not None:
-                self._value = value
-                break
