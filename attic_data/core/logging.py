@@ -4,7 +4,6 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-
 # Log to the console
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
