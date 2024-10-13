@@ -62,7 +62,7 @@ class AmazonProductscraper:
 
     def scrape(self):
         self._has_failed = True
-        with logged_try_except("🕸️ amazon_product_scraper"):
+        with logged_try_except("amazon_product_scraper"):
             res = requests.get(self._url, headers=prepare_headers())
             res.raise_for_status()
 
@@ -74,6 +74,8 @@ class AmazonProductscraper:
     def dump(self, sink: Sink):
         if not self._product:
             raise Exception("Product not scraped yet")
+
+        logger.info(f"📦 Dumping product to sink ({self._product.id})")
 
         path = f"products/{self._product.id}"
         sink.dump_to_location(path, self._product.model_dump())

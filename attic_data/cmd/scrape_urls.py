@@ -9,6 +9,9 @@ from attic_data.core.logging import logger
 from attic_data.core.utils import cd, prepare_headers
 
 
+OUTPUT_DIR = "product_urls"
+
+
 def _fetch_max_pages_for_query(query: str):
     url = f"https://www.amazon.in/s?k={query}"
     res = requests.get(url, headers=prepare_headers())
@@ -65,7 +68,7 @@ def _fetch_all_pages_for_query(query: str):
 
 
 def _scrape_product_links_from_queries(queries: list[str]):
-    with cd("output"):
+    with cd(OUTPUT_DIR):
         for i, query in enumerate(queries):
             logger.info(f"Fetching URLs for query {i + 1}/{len(queries)}: {query}")
             urls = _fetch_all_pages_for_query(query)
@@ -80,7 +83,7 @@ def _scrape_product_links_from_queries(queries: list[str]):
 def _articulate_urls_in_one_file():
     # Get all files in the output directory
     files = []
-    for root, _, filenames in os.walk("../data/output"):
+    for root, _, filenames in os.walk(OUTPUT_DIR):
         for filename in filenames:
             files.append(os.path.join(root, filename))
 

@@ -25,7 +25,7 @@ sink = SinkPipeline(
         # File system sinks
         SinkPipeline(
             [
-                JSONSink("./data/"),
+                JSONSink("./data"),
                 # FileSink(),
             ]
         ),

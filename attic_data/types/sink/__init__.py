@@ -12,5 +12,5 @@ class Sink:
         try:
             self.dump_to_location(location, data)
         except Exception as e:
-            print(f"Failed to dump data to file: {e}")
+            print(f"Failed to dump data: {e}")
             pass
