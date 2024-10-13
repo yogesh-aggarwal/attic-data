@@ -50,6 +50,7 @@ class AmazonProductscraper:
         logger.info(f"    ✅ Media: {media}")
 
         product = Product.with_empty_values(self.url.split("/")[3])
+        product.url = self._url
 
         # --- Media
         if media:

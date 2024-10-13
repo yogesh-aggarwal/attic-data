@@ -12,7 +12,6 @@ from attic_data.types.sink.json import JSONSink
 from attic_data.types.sink.mongo import MongoSink
 from attic_data.types.sink.pipeline import SinkPipeline
 
-
 thread_pool = ThreadPoolExecutor(
     max_workers=THREAD_POOL_MAX_WORKERS,
     thread_name_prefix="amazon-scrapper_product",
