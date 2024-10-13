@@ -59,15 +59,14 @@ def scrape_products_from_urls_file(file_path: str):
                     try:
                         _scrape_product_from_url(url)
                     except Exception as e:
-                        failed_urls.append(url)
                         logger.error(f"❌ Failed to scrape product: {e}")
 
-                thread_pool.submit(_scrape, url)
+                        failed_urls.append(url)
+                        with open("failed_urls.txt", "w+") as f:
+                            for url in failed_urls:
+                                f.write(f"{url}\n")
 
-    if failed_urls:
-        with open("failed_urls.txt", "w+") as f:
-            for url in failed_urls:
-                f.write(f"{url}\n")
+                thread_pool.submit(_scrape, url)
 
 
 def main():
