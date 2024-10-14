@@ -27,7 +27,7 @@ def _scrape_product_from_url(url: str):
     if scraper.has_failed:
         logger.error(f"❌ Failed to scrape product: {url}")
     else:
-        scraper.dump(sink)
+        # scraper.dump(sink)
         logger.info(f"🆗 Product scraped: {url}")
 
 
@@ -45,14 +45,13 @@ def scrape_products():
                 for url in failed_urls:
                     f.write(f"{url}\n")
 
-    queries_urls = db["urls"].find()
-
     with ThreadPoolExecutor(
         max_workers=THREAD_POOL_MAX_WORKERS,
         thread_name_prefix="amazon-scrapper_product",
     ) as thread_pool:
-        for query_url in queries_urls:
-            urls = query_url["urls"]
+        docs = db["urls"].find()
+        for doc in docs:
+            urls = doc["urls"]
             for url in urls:
                 thread_pool.submit(_scrape, url)
         thread_pool.shutdown(wait=True)
