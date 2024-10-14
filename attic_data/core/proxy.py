@@ -59,7 +59,7 @@ class ProxyProviders:
             ProxyProviders.fetch_from_proxylist_geonode,
             ProxyProviders.fetch_from_proxylist,
             ProxyProviders.fetch_from_proxyscrape,
-            ProxyProviders.fetch_from_thespeedx_github,
+            # ProxyProviders.fetch_from_thespeedx_github,
         ]
 
         final_proxies: list[str] = []
