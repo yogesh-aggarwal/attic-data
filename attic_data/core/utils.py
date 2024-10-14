@@ -38,7 +38,8 @@ def with_retry(tries: int):
 def cd(path: str):
     try:
         os.makedirs(path, exist_ok=True)
-        yield os.chdir(path)
+        os.chdir(path)
+        yield
     finally:
         if path != ".":
             os.chdir("..")
