@@ -18,7 +18,7 @@ sink = SinkPipeline(
         # Database sinks
         SinkPipeline([MongoSink(db)]),
         # File system sinks
-        SinkPipeline([JSONSink("./data/queries")]),
+        SinkPipeline([JSONSink("./data/urls")]),
     ]
 )
 
