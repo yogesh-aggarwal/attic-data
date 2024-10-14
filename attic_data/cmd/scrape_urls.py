@@ -2,44 +2,54 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 
 import bs4
+from pymongo import MongoClient
 
-from attic_data.core.constants import THREAD_POOL_MAX_WORKERS
+from attic_data.core.constants import MONGO_URI, THREAD_POOL_MAX_WORKERS
 from attic_data.core.logging import logger
 from attic_data.core.request import make_get_request_with_proxy
-from attic_data.core.utils import cd
+from attic_data.core.utils import with_retry
+from attic_data.types.sink.json import JSONSink
+from attic_data.types.sink.mongo import MongoSink
+from attic_data.types.sink.pipeline import SinkPipeline
 
-OUTPUT_DIR = "product_urls"
-
-thread_pool = ThreadPoolExecutor(
-    max_workers=THREAD_POOL_MAX_WORKERS,
-    thread_name_prefix="amazon-scrapper_urls",
+db = MongoClient(MONGO_URI)["attic"]
+sink = SinkPipeline(
+    [
+        # Database sinks
+        SinkPipeline([MongoSink(db)]),
+        # File system sinks
+        SinkPipeline([JSONSink("./data/queries")]),
+    ]
 )
 
 
+@with_retry(3)
 def _fetch_max_pages_for_query(query: str):
     url = f"https://www.amazon.in/s?k={query}"
+
     res = make_get_request_with_proxy(url)
     if res is None:
-        return 1
+        raise ValueError(f"Failed to fetch max pages for query: {query}")
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
     max_pages = soup.select(".s-pagination-item.s-pagination-disabled")
     if not max_pages:
-        return 1
+        raise ValueError(f"Failed to fetch max pages for query: {query}")
     max_pages = max_pages[-1]
     if max_pages is None:
-        return 1
+        raise ValueError(f"Failed to fetch max pages for query: {query}")
     max_pages = int(max_pages.get_text())
 
     return max_pages
 
 
-def _fetch_urls(query: str, page: int) -> list[str]:
+@with_retry(3)
+def _fetch_urls_on_page(query: str, page: int) -> list[str]:
     url = f"https://www.amazon.in/s?k={query}&page={page}&ref=nb_sb_noss_2"
     res = make_get_request_with_proxy(url)
     if res is None:
-        return []
+        raise ValueError(f"Failed to fetch URLs on page {page} for query: {query}")
 
     soup = bs4.BeautifulSoup(res.text, "html.parser")
     links = soup.select(
@@ -54,82 +64,57 @@ def _fetch_urls(query: str, page: int) -> list[str]:
     return list(urls)
 
 
-def _fetch_all_pages_for_query(query: str):
-    urls = []
+@with_retry(3)
+def _fetch_urls_for_query(query: str):
+    logger.info(f"🔍 Fetching URLs for query: {query}")
+    max_pages = 1
+    try:
+        max_pages = _fetch_max_pages_for_query(query)
+    except:
+        pass
+    max_pages = 1
+    logger.info(f"✅ Found {max_pages} pages".rjust(4))
 
-    max_pages = _fetch_max_pages_for_query(query)
-    logger.info(f"\t✅ Found {max_pages} pages")
-
+    all_urls = []
     for page in range(1, max_pages + 1):
-        attempts = 3
-        while attempts:
-            attempts -= 1
-            page_urls = _fetch_urls(query, page)
-            if page_urls:
-                urls.extend(page_urls)
-                break
+        urls = []
+        try:
+            urls = _fetch_urls_on_page(query, page)
+        except:
+            pass
+        logger.info(f"✅ Found {len(urls)} URLs on page {page}".rjust(8))
 
-        logger.info(f"\t\t✅ Found {len(page_urls)} URLs on page {page}")
-    logger.info(f"\t✅ Found {len(urls)} URLs")
+        all_urls.extend(urls)
 
-    return urls
+    logger.info(f"✅ Found {len(all_urls)} URLs".rjust(4))
 
+    sink.dump_to_location(f"urls/{query}", {"query": query, "urls": all_urls})
 
-def _scrape_and_dump_all_pages_for_query(query: str):
-    urls = _fetch_all_pages_for_query(query)
-    with open(f"{query}.txt", "w+") as f:
-        f.write("\n".join(urls))
-
-    logger.info(f"📦 {len(urls)} URLs dumped to {query}.txt")
+    return all_urls
 
 
-def _scrape_product_links_from_queries(queries: list[str]):
-    with cd(OUTPUT_DIR):
+def _scrape_product_links_for_queries(queries: list[str]):
+    with ThreadPoolExecutor(
+        max_workers=THREAD_POOL_MAX_WORKERS,
+        thread_name_prefix="amazon-scrapper_urls",
+    ) as thread_pool:
         for query in queries:
-            thread_pool.submit(_scrape_and_dump_all_pages_for_query, query)
+            thread_pool.submit(_fetch_urls_for_query, query)
+        thread_pool.shutdown(wait=True)
 
 
-def _articulate_urls_in_one_file():
-    # Get all files in the output directory
-    files = []
-    for root, _, filenames in os.walk(OUTPUT_DIR):
-        for filename in filenames:
-            files.append(os.path.join(root, filename))
+def scrape_product_links():
+    queries = db["queries"].find()
+    queries = map(lambda x: x["queries"], queries)
+    queries = [item for sublist in queries for item in sublist]
+    queries = sorted(list(set(queries)))
 
-    # Read all URLs from all files
-    all_urls: list[str] = []
-    for file in files:
-        with open(file, "r") as f:
-            all_urls += f.read().strip().split("\n")
+    # queries = queries[:1]
 
-    # Remove trailing and leading whitespaces
-    urls = map(lambda x: x.strip(), all_urls)
-    # Remove invalid URLs
-    urls = map(lambda x: x[x.rfind("https://") :], urls)
-    # Remove query parameters
-    urls = map(lambda x: x.split("?")[0], urls)
-    # Remove invalid URLs
-    urls = filter(lambda x: x.startswith("https://www.amazon."), urls)
-    # Remove duplicates
-    urls = list(set(urls))
-
-    with open("urls.txt", "w+") as f:
-        f.write("\n".join(urls))
-
-    logger.info(f"📦 {len(urls)} URLs dumped to urls.txt")
-
-
-def scrape_product_links_from_queries_file(file_path: str):
-    with cd("data"):
-        with open(file_path) as f:
-            queries = sorted(f.read().strip().split("\n"))
-        _scrape_product_links_from_queries(queries)
-        _articulate_urls_in_one_file()
+    _scrape_product_links_for_queries(queries)
 
 
 def main():
     os.system("clear")
 
-    with cd("data"):
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
-    scrape_product_links_from_queries_file("queries.txt")
+    scrape_product_links()
