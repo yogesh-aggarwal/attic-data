@@ -58,8 +58,21 @@ def _fetch_urls_on_page(query: str, page: int) -> list[str]:
 
     urls: set[str] = set()
     for link in links:
-        url = link.get("href")
-        urls.add(f"https://www.amazon.in{url}")
+        url: str | None = link.get("href")  # type: ignore
+        if url is None:
+            continue
+
+        # Remove trailing and leading whitespaces
+        url = url.strip()
+        # Prefix with "https://www.amazon.in"
+        if not url.startswith("https://www.amazon."):
+            url = "https://www.amazon.in" + url
+        # Find the last occurence of "https://" and take the URL from there
+        url = url[url.rfind("https://") :]
+        # Remove query parameters
+        url = url.split("?")[0]
+
+        urls.add(url)
 
     if len(urls) == 0:
         raise ValueError(f"Failed to fetch URLs on page {page} for query: {query}")
