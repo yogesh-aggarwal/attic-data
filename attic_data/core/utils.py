@@ -35,15 +35,15 @@ def with_retry(tries: int):
     return decorator
 
 
-@contextlib.contextmanager
-def cd(path: str):
-    try:
-        os.makedirs(path, exist_ok=True)
-        os.chdir(path)
-        yield
-    finally:
-        if path != ".":
-            os.chdir("..")
+# @contextlib.contextmanager
+# def cd(path: str):
+#     try:
+#         os.makedirs(path, exist_ok=True)
+#         os.chdir(path)
+#         yield
+#     finally:
+#         if path != ".":
+#             os.chdir("..")
 
 
 @contextlib.contextmanager
