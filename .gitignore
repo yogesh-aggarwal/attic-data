@@ -3,5 +3,6 @@ credentials*.json
 data/
 scratch/
 
+logs/
 *.log
 .env

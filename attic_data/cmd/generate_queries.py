@@ -1,12 +1,23 @@
 import os
 
 import ollama
+from pymongo import MongoClient
 
+from attic_data.core.constants import MONGO_URI
 from attic_data.core.logging import logger
-from attic_data.core.utils import cd
+from attic_data.types.sink.json import JSONSink
+from attic_data.types.sink.mongo import MongoSink
+from attic_data.types.sink.pipeline import SinkPipeline
 
-
-OUTPUT_DIR = "queries"
+db = MongoClient(MONGO_URI)["attic"]
+sink = SinkPipeline(
+    [
+        # Database sinks
+        SinkPipeline([MongoSink(db)]),
+        # File system sinks
+        SinkPipeline([JSONSink("./data/queries")]),
+    ]
+)
 
 
 def _generate_queries_for_description(description: str) -> list[str]:
@@ -43,38 +54,14 @@ def _generate_queries_for_categories(categories: dict[str, int]) -> None:
             f"{count} search queries for various {category} products that a user might search for on the search bar of an ecommerce website like Amazon. Make sure that the queries are diverse and cover a wide range of products and MUST RESULT IN PRODUCTS ON AMAZON'S WEBSITE."
         )
 
-        file_path = f"{OUTPUT_DIR}/{category}.txt"
-        with open(file_path, "w+") as f:
-            f.write("\n".join(queries))
+        sink.dump_to_location_safe(
+            f"queries/{category}", {"category": category, "queries": queries}
+        )
 
-        logger.info(f"📦 {count} queries for {category} dumped to {file_path}")
-
-
-def _articulate_queries_in_one_file():
-    # Get all files in the output directory
-    files = []
-    for root, _, filenames in os.walk(OUTPUT_DIR):
-        for filename in filenames:
-            files.append(os.path.join(root, filename))
-
-    # Read all URLs from all files
-    all_queries: list[str] = []
-    for file in files:
-        with open(file, "r") as f:
-            all_queries += f.read().strip().split("\n")
-
-    # Remove trailing and leading whitespaces
-    queries = map(lambda x: x.strip(), all_queries)
-    # Remove duplicates
-    queries = list(set(queries))
-
-    with open("queries.txt", "w+") as f:
-        f.write("\n".join(queries))
-
-    logger.info(f"📦 {len(queries)} queries dumped to queries.txt")
+        logger.info(f"📦 {count} queries for {category} dumped")
 
 
-def generate_and_articulate_queries():
+def generate_queries():
     categories = {
         "electronics": 100,
         "clothing": 100,
@@ -128,14 +115,10 @@ def generate_and_articulate_queries():
         "audio and home theater": 100,
     }
 
-    with cd("data"):
-        _generate_queries_for_categories(categories)
-        _articulate_queries_in_one_file()
+    _generate_queries_for_categories(categories)
 
 
 def main():
     os.system("clear")
 
-    with cd("data"):
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
-    generate_and_articulate_queries()
+    generate_queries()
