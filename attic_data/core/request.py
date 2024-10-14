@@ -1,12 +1,14 @@
 import requests
 
+from attic_data.core.constants import PROXY_RETRY_LIMIT
+
 from .logging import logger
-from .utils import prepare_headers
 from .proxy import get_proxy_ip
+from .utils import prepare_headers
 
-
+    
 def make_get_request_with_proxy(
-    url: str, n_tries: int = 25
+    url: str, n_tries: int = PROXY_RETRY_LIMIT
 ) -> requests.Response | None:
     for _ in range(n_tries):
         try:
