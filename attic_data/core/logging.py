@@ -1,3 +1,4 @@
+import os
 import logging
 
 # Create a logger
@@ -11,7 +12,10 @@ console_handler.setFormatter(logging.Formatter("%(levelname)s: %(name)s: %(messa
 logger.addHandler(console_handler)
 
 # Log to a file
-file_handler = logging.FileHandler("log.log")
+os.makedirs(os.path.join(os.getcwd(), "logs"), exist_ok=True)
+os.remove(os.path.join(os.getcwd(), "logs", "attic_data.log"))
+
+file_handler = logging.FileHandler(os.path.join(os.getcwd(), "logs", "attic_data.log"))
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(
     logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
