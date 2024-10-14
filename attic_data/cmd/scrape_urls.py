@@ -18,7 +18,7 @@ sink = SinkPipeline(
         # Database sinks
         SinkPipeline([MongoSink(db)]),
         # File system sinks
-        SinkPipeline([JSONSink("./data/urls")]),
+        SinkPipeline([JSONSink("./data")]),
     ]
 )
 
@@ -61,6 +61,9 @@ def _fetch_urls_on_page(query: str, page: int) -> list[str]:
         url = link.get("href")
         urls.add(f"https://www.amazon.in{url}")
 
+    if len(urls) == 0:
+        raise ValueError(f"Failed to fetch URLs on page {page} for query: {query}")
+
     return list(urls)
 
 
@@ -73,7 +76,7 @@ def _fetch_urls_for_query(query: str):
     except:
         pass
     max_pages = 1
-    logger.info(f"✅ Found {max_pages} pages".rjust(4))
+    logger.info(f"    ✅ Found {max_pages} pages")
 
     all_urls = []
     for page in range(1, max_pages + 1):
@@ -82,11 +85,11 @@ def _fetch_urls_for_query(query: str):
             urls = _fetch_urls_on_page(query, page)
         except:
             pass
-        logger.info(f"✅ Found {len(urls)} URLs on page {page}".rjust(8))
+        logger.info(f"        ✅ Found {len(urls)} URLs on page {page}".rjust(8))
 
         all_urls.extend(urls)
 
-    logger.info(f"✅ Found {len(all_urls)} URLs".rjust(4))
+    logger.info(f"    ✅ Found {len(all_urls)} URLs")
 
     sink.dump_to_location(f"urls/{query}", {"query": query, "urls": all_urls})
 

@@ -16,7 +16,7 @@ sink = SinkPipeline(
         # Database sinks
         SinkPipeline([MongoSink(db)]),
         # File system sinks
-        SinkPipeline([JSONSink("./data/products")]),
+        SinkPipeline([JSONSink("./data")]),
     ]
 )
 

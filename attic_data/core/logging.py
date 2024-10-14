@@ -12,10 +12,14 @@ console_handler.setFormatter(logging.Formatter("%(levelname)s: %(name)s: %(messa
 logger.addHandler(console_handler)
 
 # Log to a file
-os.makedirs(os.path.join(os.getcwd(), "logs"), exist_ok=True)
-os.remove(os.path.join(os.getcwd(), "logs", "attic_data.log"))
+os.makedirs("logs", exist_ok=True)
 
-file_handler = logging.FileHandler(os.path.join(os.getcwd(), "logs", "attic_data.log"))
+log_filename = "attic_data.log"
+log_file_path = os.path.join("logs", log_filename)
+if os.path.exists(log_file_path):
+    os.remove(log_file_path)
+
+file_handler = logging.FileHandler(os.path.join("logs", log_filename))
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(
     logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")

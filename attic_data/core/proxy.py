@@ -1,14 +1,16 @@
 import itertools
 from concurrent.futures import ThreadPoolExecutor
+from typing import Callable
 
 import requests
 
 from .logging import logger
-from .utils import prepare_headers
+from .utils import prepare_headers, with_retry
 
 
 class ProxyProviders:
     @staticmethod
+    @with_retry(3)
     def fetch_from_proxylist_geonode() -> list[str]:
         final_proxies = []
         for i in range(1, 6):
@@ -24,6 +26,7 @@ class ProxyProviders:
         return list(set(final_proxies))
 
     @staticmethod
+    @with_retry(3)
     def fetch_from_proxylist() -> list[str]:
         url = "https://www.proxy-list.download/api/v1/get?type=http"
         all_proxies = requests.get(url, headers=prepare_headers()).text.split("\r\n")
@@ -33,6 +36,7 @@ class ProxyProviders:
         return list(set(parsed_proxies))
 
     @staticmethod
+    @with_retry(3)
     def fetch_from_proxyscrape() -> list[str]:
         url = "https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&protocol=http&proxy_format=protocolipport&format=text&timeout=20000"
         all_proxies = requests.get(url, headers=prepare_headers()).text.split("\r\n")
@@ -42,6 +46,7 @@ class ProxyProviders:
         return list(set(parsed_proxies))
 
     @staticmethod
+    @with_retry(3)
     def fetch_from_thespeedx_github() -> list[str]:
         url = "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt"
         all_proxies = requests.get(url, headers=prepare_headers()).text.split("\n")
@@ -52,6 +57,7 @@ class ProxyProviders:
         return list(set(parsed_proxies))
 
     @staticmethod
+    @with_retry(3)
     def fetch_from_all_providers() -> list[str]:
         logger.info("🐎 Fetching & caching proxies")
 
@@ -63,20 +69,19 @@ class ProxyProviders:
         ]
 
         final_proxies: list[str] = []
+
+        def fetch_provider(provider: Callable[[], list[str]]):
+            try:
+                proxies = provider()
+                if len(proxies) < 5:
+                    raise Exception("Failed to fetch proxies from provider")
+                final_proxies.extend(proxies)
+            except Exception:
+                pass
+
         with ThreadPoolExecutor() as executor:
             for provider in providers:
-
-                def fetch_provider():
-                    try:
-                        for _ in range(5):
-                            proxies = provider()
-                            if proxies and len(proxies) > 5:
-                                final_proxies.extend(proxies)
-                                break
-                    except Exception:
-                        pass
-
-                executor.submit(fetch_provider)
+                executor.submit(fetch_provider, provider)
 
         if len(final_proxies) < 5:
             raise Exception("Failed to fetch proxies from all providers")
