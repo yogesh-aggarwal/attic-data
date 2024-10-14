@@ -6,7 +6,7 @@ authors = ["Yogesh Aggarwal <yogeshdevaggarwal@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.12"
 selenium = "^4.25.0"
 undetected-chromedriver = "^3.5.5"
 bs4 = "^0.0.2"
