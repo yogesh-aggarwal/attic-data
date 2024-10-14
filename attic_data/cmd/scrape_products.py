@@ -66,6 +66,7 @@ def scrape_products_from_urls_file(file_path: str):
                                 f.write(f"{url}\n")
 
                 thread_pool.submit(_scrape, url)
+        thread_pool.shutdown(wait=True)
 
 
 def main():

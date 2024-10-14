@@ -24,7 +24,8 @@ def with_retry(tries: int):
             for _ in range(tries):
                 try:
                     return func(*args, **kwargs)
-                except:
+                except Exception as e:
+                    print(e)
                     pass
 
             raise Exception("Failed to execute")
