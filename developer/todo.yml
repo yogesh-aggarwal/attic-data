@@ -1,0 +1,23 @@
+generated:
+  - metadata
+  - listing:
+      - sku
+      - status
+
+scraped:
+  - media:
+  - listing:
+      - seo
+      - title
+      - description
+      - categories
+      - tags
+  - details:
+      - brand
+      - model
+      - condition
+      - clearance
+      - legal
+      - attributes
+  - variants
+  - reviews
