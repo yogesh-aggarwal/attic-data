@@ -155,7 +155,11 @@ class Product(BaseModel):
                 ),
                 title="",
                 description=ProductDescription(short="", long=""),
-                categories={},
+                categories={
+                    "primary": "",
+                    "secondary": "",
+                    "subcategory": "",
+                },
                 tags=[],
                 status=ProductStatus(
                     availability="", lifecycle="", featured=False, on_sale=False
