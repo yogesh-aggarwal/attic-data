@@ -30,7 +30,7 @@ class AmazonProductDescriptionScraper(BS4Scraper[ProductDescription]):
         return value
 
     def _scrape_generic_description(self) -> ProductDescription | None:
-        short_description, long_description = "yo", ""
+        short_description, long_description = "", ""
 
         # --- Short description -----------------------------------------------
 

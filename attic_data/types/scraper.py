@@ -31,7 +31,7 @@ class Scraper[T]:
             if value:
                 self._value = value
                 break
-        self._has_failed = value is None
+        self._has_failed = self._value is None
 
         return self
 
