@@ -1,9 +1,12 @@
 all:
+	@make clean
 	@make metadata
 	@make queries
 	@make urls
 	@make products
 
+clean:
+	@find . -type d -name "__pycache__" -exec rm -r {} +
 
 metadata:
 	@poetry run generate_metadata
