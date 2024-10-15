@@ -58,9 +58,4 @@ variants:
 reviews:
   total_count: number (Total number of reviews, e.g., 348)
   average_rating: number (Average rating out of 5, e.g., 4.7)
-  star_distribution:
-    5: number (Number of 5-star reviews, e.g., 278)
-    4: number (Number of 4-star reviews, e.g., 45)
-    3: number (Number of 3-star reviews, e.g., 12)
-    2: number (Number of 2-star reviews, e.g., 8)
-    1: number (Number of 1-star reviews, e.g., 5)
+  star_distribution: [number, number, number, number, number] (Distribution of star ratings)

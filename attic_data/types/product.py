@@ -76,22 +76,12 @@ class ProductDetails(BaseModel):
     attributes: list[ProductAttributes] = Field(...)
 
 
-class ProductReviewsDistribution(BaseModel):
-    model_config = ConfigDict(populate_by_name=True)
-
-    five: int = Field(...)
-    four: int = Field(...)
-    three: int = Field(...)
-    two: int = Field(...)
-    one: int = Field(...)
-
-
 class ProductReviews(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     total_count: int = Field(...)
     average_rating: float = Field(...)
-    star_distribution: ProductReviewsDistribution = Field(...)
+    star_distribution: list[int] = Field(...)
 
 
 class ProductMetadata(BaseModel):
@@ -177,12 +167,6 @@ class Product(BaseModel):
             reviews=ProductReviews(
                 total_count=0,
                 average_rating=0.0,
-                star_distribution=ProductReviewsDistribution(
-                    five=0,
-                    four=0,
-                    three=0,
-                    two=0,
-                    one=0,
-                ),
+                star_distribution=[0, 0, 0, 0, 0],
             ),
         )
