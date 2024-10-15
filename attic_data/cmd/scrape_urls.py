@@ -71,6 +71,9 @@ def _fetch_urls_on_page(query: str, page: int) -> list[str]:
         url = url[url.rfind("https://") :]
         # Remove query parameters
         url = url.split("?")[0]
+        # Clean up
+        if url.find("/ref=") != -1:
+            url = url[: url.find("/ref=")]
 
         urls.add(url)
 
