@@ -6,7 +6,7 @@ load_dotenv()
 
 # Runtime constants
 
-USE_PROXY = False
+USE_PROXY = True
 THREAD_POOL_MAX_WORKERS = 48
 PROXY_RETRY_LIMIT = 250
 

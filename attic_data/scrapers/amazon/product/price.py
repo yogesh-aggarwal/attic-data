@@ -21,7 +21,7 @@ class AmazonProductPricescraper(BS4Scraper[float]):
     def _scrape_generic_price(self) -> float | None:
         value: float | None = None
 
-        element = self.find_element(".a-price")
+        element = self.find_element(".a-offscreen")
         if element:
             value = self._util_extract_price_from_text(element.text)
 
