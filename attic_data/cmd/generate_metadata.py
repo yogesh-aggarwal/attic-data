@@ -10,6 +10,16 @@ db = MongoClient(MONGO_URI)["attic"]
 sink = SinkPipeline([MongoSink(db)])
 
 
+def _generate_tracking_metadata():
+    data = {
+        "products": {
+            "failed_urls": [],
+        }
+    }
+
+    sink.dump_to_location_safe("metadata/tracking", data)
+
+
 def _generate_categories_metadata():
     data = {
         "electronics": 100,
@@ -62,4 +72,5 @@ def _generate_categories_metadata():
 def main():
     os.system("clear")
 
+    _generate_tracking_metadata()
     _generate_categories_metadata()

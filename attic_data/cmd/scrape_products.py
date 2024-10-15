@@ -24,27 +24,20 @@ sink = SinkPipeline(
 def _scrape_product_from_url(url: str):
     scraper = AmazonProductscraper(url)
     scraper.scrape()
-    if scraper.has_failed:
-        logger.error(f"❌ Failed to scrape product: {url}")
-    else:
-        # scraper.dump(sink)
+    if not scraper.has_failed:
+        scraper.dump(sink)
         logger.info(f"🆗 Product scraped: {url}")
+        return
+
+    db["metadata"].update_one(
+        {"_id": "tracking"},
+        {"$push": {"products.failed_urls": url}},
+    )
+
+    logger.error(f"❌ Failed to scrape product: {url}")
 
 
 def scrape_products():
-    failed_urls = []
-
-    def _scrape(url: str):
-        try:
-            _scrape_product_from_url(url)
-        except Exception as e:
-            logger.error(f"❌ Failed to scrape product: {e}")
-
-            failed_urls.append(url)
-            with open("failed_urls.txt", "w+") as f:
-                for url in failed_urls:
-                    f.write(f"{url}\n")
-
     with ThreadPoolExecutor(
         max_workers=THREAD_POOL_MAX_WORKERS,
         thread_name_prefix="amazon-scrapper_product",
@@ -53,7 +46,7 @@ def scrape_products():
         for doc in docs:
             urls = doc["urls"]
             for url in urls:
-                thread_pool.submit(_scrape, url)
+                thread_pool.submit(_scrape_product_from_url, url)
         thread_pool.shutdown(wait=True)
 
 
