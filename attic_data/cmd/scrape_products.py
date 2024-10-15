@@ -40,11 +40,16 @@ def scrape_products():
         max_workers=THREAD_POOL_MAX_WORKERS,
         thread_name_prefix="amazon-scrapper_product",
     ) as thread_pool:
-        docs = db["urls"].find()
-        for doc in docs:
-            urls = doc["urls"]
-            for url in urls:
-                thread_pool.submit(_scrape_product_from_url, url)
+        thread_pool.submit(
+            _scrape_product_from_url,
+            "https://www.amazon.in/BSB-HOME-Premium-Double-Bedsheet/dp/B09X772SFJ",
+        )
+
+        # docs = db["urls"].find()
+        # for doc in docs:
+        #     urls = doc["urls"]
+        #     for url in urls:
+        #         thread_pool.submit(_scrape_product_from_url, url)
         thread_pool.shutdown(wait=True)
 
 

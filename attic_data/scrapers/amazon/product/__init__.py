@@ -11,6 +11,7 @@ from attic_data.scrapers.amazon.product.description import (
 )
 from attic_data.scrapers.amazon.product.media import AmazonProductMediascraper
 from attic_data.scrapers.amazon.product.price import AmazonProductPricescraper
+from attic_data.scrapers.amazon.product.seo import AmazonProductSEOScraper
 from attic_data.scrapers.amazon.product.title import AmazonProductTitlescraper
 from attic_data.types.product import *
 from attic_data.types.sink import Sink
@@ -74,28 +75,38 @@ class AmazonProductscraper:
         media = AmazonProductMediascraper(self._soup).scrape().value
         logger.info(f"    ✅ Media: {media}")
 
+        # --- SEO
+        seo = AmazonProductSEOScraper(self._soup).scrape().value
+        logger.info(f"    ✅ SEO: {seo}")
+
         # ---------------------------------------------------------------------
 
-        if not title or not description or not price or not media:
-            raise Exception("Failed to extract product details")
+        assert (
+            title and description and price and media and seo
+        ), "Failed to scrape product details"
+
+        # ---------------------------------------------------------------------
 
         product = Product.with_empty_values(self.url.split("/")[3])
         product.url = self._url
 
-        # --- Media
+        # --- Media -----------------------------------------------------------
+
         if media:
             product.media = media
 
-        # --- Listing
-        product.listing.sku = generate_id()
-        product.listing.title = title or ""
-        product.listing.description = description or ""
-        product.listing.seo.meta_title = title or ""
-        product.listing.seo.meta_description = description.short or ""
+        # --- Listing ---------------------------------------------------------
 
-        # --- Details
-        # --- Variants
-        # --- Reviews
+        product.listing.sku = generate_id()
+        product.listing.title = title
+        product.listing.description = description
+        product.listing.seo = seo
+
+        product.listing
+
+        # --- Details ---------------------------------------------------------
+        # --- Variants --------------------------------------------------------
+        # --- Reviews ---------------------------------------------------------
 
         self._product = product
 
