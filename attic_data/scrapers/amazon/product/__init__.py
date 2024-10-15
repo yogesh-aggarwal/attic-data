@@ -5,7 +5,7 @@ import requests
 
 from attic_data.core.logging import logger
 from attic_data.core.request import make_get_request_with_proxy
-from attic_data.core.utils import logged_try_except, prepare_headers
+from attic_data.core.utils import logged_try_except, prepare_headers, with_retry
 from attic_data.scrapers.amazon.product.media import AmazonProductMediascraper
 from attic_data.scrapers.amazon.product.price import AmazonProductPricescraper
 from attic_data.scrapers.amazon.product.title import AmazonProductTitlescraper
@@ -15,7 +15,6 @@ from attic_data.types.sink import Sink
 
 class AmazonProductscraper:
     _url: str
-    _has_failed: bool
     _soup: bs4.BeautifulSoup | None
     _product: Product | None
 
@@ -30,12 +29,23 @@ class AmazonProductscraper:
         return self._url
 
     @property
-    def has_failed(self):
-        return self._has_failed
-
-    @property
     def product(self):
         return self._product
+
+    def dump(self, sink: Sink):
+        if not self._product:
+            raise Exception("Product not scraped yet")
+
+        logger.info(f"📦 Dumping product to sink ({self._product.id})")
+
+        path = f"products/{self._product.id}"
+        sink.dump_to_location_safe(path, self._product.model_dump())
+
+    def _init_soup(self):
+        res = make_get_request_with_proxy(self._url)
+        if not res:
+            raise Exception("Failed to fetch product page")
+        self._soup = bs4.BeautifulSoup(res.text, "html.parser")
 
     def _articulate(self):
         if not self._soup:
@@ -48,6 +58,9 @@ class AmazonProductscraper:
         logger.info(f"    ✅ Price: {price}")
         media = AmazonProductMediascraper(self._soup).scrape().value
         logger.info(f"    ✅ Media: {media}")
+
+        if not title or not price:
+            raise Exception("Failed to extract product details")
 
         product = Product.with_empty_values(self.url.split("/")[3])
         product.url = self._url
@@ -67,29 +80,9 @@ class AmazonProductscraper:
 
         self._product = product
 
-    def _init_soup(self):
-        if self._soup:
-            return
-
-        res = make_get_request_with_proxy(self._url)
-        if not res:
-            raise Exception("Failed to fetch product page")
-        self._soup = bs4.BeautifulSoup(res.text, "html.parser")
-
+    @with_retry(128)
     def scrape(self):
         logger.info(f"📡 Fetching product ({self._url})")
 
-        self._has_failed = True
-        with logged_try_except("amazon_product_scraper"):
-            self._init_soup()
-            self._articulate()
-        self._has_failed = False
-
-    def dump(self, sink: Sink):
-        if not self._product:
-            raise Exception("Product not scraped yet")
-
-        logger.info(f"📦 Dumping product to sink ({self._product.id})")
-
-        path = f"products/{self._product.id}"
-        sink.dump_to_location_safe(path, self._product.model_dump())
+        self._init_soup()
+        self._articulate()

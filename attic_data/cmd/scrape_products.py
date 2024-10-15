@@ -23,18 +23,16 @@ sink = SinkPipeline(
 
 def _scrape_product_from_url(url: str):
     scraper = AmazonProductscraper(url)
-    scraper.scrape()
-    if not scraper.has_failed:
+    try:
+        scraper.scrape()
         scraper.dump(sink)
         logger.info(f"🆗 Product scraped: {url}")
-        return
-
-    db["metadata"].update_one(
-        {"_id": "tracking"},
-        {"$push": {"products.failed_urls": url}},
-    )
-
-    logger.error(f"❌ Failed to scrape product: {url}")
+    except:
+        db["metadata"].update_one(
+            {"_id": "tracking"},
+            {"$push": {"products.failed_urls": url}},
+        )
+        logger.error(f"❌ Failed to scrape product: {url}")
 
 
 def scrape_products():

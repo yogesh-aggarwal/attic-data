@@ -7,6 +7,8 @@ import requests
 from .logging import logger
 from .utils import prepare_headers, with_retry
 
+from attic_data.core.constants import USE_PROXY
+
 
 class ProxyProviders:
     @staticmethod
@@ -91,13 +93,10 @@ class ProxyProviders:
         return final_proxies
 
 
-proxies = ProxyProviders.fetch_from_all_providers()
+proxies = ProxyProviders.fetch_from_all_providers() if USE_PROXY else []
 proxies_iter = itertools.cycle(proxies)
 
 
 def get_proxy_ip():
-    if not proxies or not proxies_iter:
-        return None
-
     while True:
-        yield next(proxies_iter)
+        yield next(proxies_iter) if USE_PROXY else None

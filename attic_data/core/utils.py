@@ -52,6 +52,7 @@ def logged_try_except(name: str = "default"):
         yield
     except Exception as e:
         logger.getChild(name).error(f"Error: {e}")
+        raise e
 
 
 def prepare_headers():

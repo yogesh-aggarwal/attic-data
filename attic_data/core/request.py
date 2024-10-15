@@ -6,15 +6,21 @@ from .logging import logger
 from .proxy import get_proxy_ip
 from .utils import prepare_headers
 
-    
+
 def make_get_request_with_proxy(
     url: str, n_tries: int = PROXY_RETRY_LIMIT
 ) -> requests.Response | None:
     for _ in range(n_tries):
-        try:
-            proxy = next(get_proxy_ip())
+        proxy = next(get_proxy_ip())
+        if proxy:
             logger.info(f"🔌 Using proxy: {proxy}")
-            res = requests.get(url, headers=prepare_headers(), proxies={"http": proxy})
+
+        try:
+            res = requests.get(
+                url,
+                headers=prepare_headers(),
+                proxies={"http": proxy} if proxy else None,
+            )
             res.raise_for_status()
 
             return res
