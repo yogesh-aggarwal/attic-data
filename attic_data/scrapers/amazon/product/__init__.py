@@ -6,6 +6,9 @@ import requests
 from attic_data.core.logging import logger
 from attic_data.core.request import make_get_request_with_proxy
 from attic_data.core.utils import logged_try_except, prepare_headers, with_retry
+from attic_data.scrapers.amazon.product.description import (
+    AmazonProductDescriptionScraper,
+)
 from attic_data.scrapers.amazon.product.media import AmazonProductMediascraper
 from attic_data.scrapers.amazon.product.price import AmazonProductPricescraper
 from attic_data.scrapers.amazon.product.title import AmazonProductTitlescraper
@@ -51,15 +54,29 @@ class AmazonProductscraper:
         if not self._soup:
             raise Exception("Soup not initialized")
 
-        # Extracting product details
+        # ---------------------------------------------------------------------
+        # -- Extracting product details
+        # ---------------------------------------------------------------------
+
+        # --- Title
         title = title = AmazonProductTitlescraper(self._soup).scrape().value
         logger.info(f"    ✅ Title: {title}")
+
+        # --- Description
+        description = AmazonProductDescriptionScraper(self._soup).scrape().value
+        logger.info(f"    ✅ Description: {description}")
+
+        # --- Price
         price = AmazonProductPricescraper(self._soup).scrape().value
         logger.info(f"    ✅ Price: {price}")
+
+        # --- Media
         media = AmazonProductMediascraper(self._soup).scrape().value
         logger.info(f"    ✅ Media: {media}")
 
-        if not title or not price:
+        # ---------------------------------------------------------------------
+
+        if not title or not description or not price or not media:
             raise Exception("Failed to extract product details")
 
         product = Product.with_empty_values(self.url.split("/")[3])
@@ -72,7 +89,9 @@ class AmazonProductscraper:
         # --- Listing
         product.listing.sku = generate_id()
         product.listing.title = title or ""
+        product.listing.description = description or ""
         product.listing.seo.meta_title = title or ""
+        product.listing.seo.meta_description = description.short or ""
 
         # --- Details
         # --- Variants
