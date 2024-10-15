@@ -63,58 +63,10 @@ def _generate_queries_for_categories(categories: dict[str, int]) -> None:
 
 
 def generate_queries():
-    categories = {
-        "electronics": 89,
-        "clothing": 89,
-        "home appliances": 89,
-        "books": 89,
-        "furniture": 89,
-        "beauty products": 89,
-        "sports equipment": 89,
-        "kitchen appliances": 89,
-        "toys": 89,
-        "stationery": 89,
-        "footwear": 89,
-        "jewelry": 89,
-        "automotive": 89,
-        "pet supplies": 89,
-        "office supplies": 89,
-        "outdoor gear": 89,
-        "health and wellness": 89,
-        "gardening tools": 89,
-        "baby products": 89,
-        "grocery and gourmet": 89,
-        "musical instruments": 89,
-        "art and craft supplies": 89,
-        "camera and photography": 89,
-        "mobile phones and accessories": 89,
-        "computer hardware": 89,
-        "software": 89,
-        "gaming": 89,
-        "watches": 89,
-        "fitness and exercise equipment": 89,
-        "luggage and travel gear": 89,
-        "personal care": 89,
-        "home decor": 89,
-        "lighting": 89,
-        "bedding and linens": 89,
-        "bathroom accessories": 89,
-        "cleaning supplies": 89,
-        "party supplies": 89,
-        "seasonal decor": 89,
-        "craft beverages": 89,
-        "small home appliances": 89,
-        "home improvement": 89,
-        "building materials": 89,
-        "security systems": 89,
-        "industrial supplies": 89,
-        "school uniforms": 89,
-        "hiking and camping equipment": 89,
-        "fishing gear": 89,
-        "board games and puzzles": 89,
-        "antiques and collectibles": 89,
-        "audio and home theater": 89,
-    }
+    categories = db["metadata"].find_one({"_id": "categories"})
+    if categories is None:
+        raise ValueError("Categories metadata not found in the database")
+    del categories["_id"]
 
     _generate_queries_for_categories(categories)
 

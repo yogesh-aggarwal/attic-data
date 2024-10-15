@@ -21,9 +21,10 @@ pymongo = "^4.10.1"
 python-dotenv = "^1.0.1"
 
 [tool.poetry.scripts]
+generate_metadata = "attic_data.cmd.generate_metadata:main"
+generate_queries = "attic_data.cmd.generate_queries:main"
 scrape_urls = "attic_data.cmd.scrape_urls:main"
 scrape_products = "attic_data.cmd.scrape_products:main"
-generate_queries = "attic_data.cmd.generate_queries:main"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"

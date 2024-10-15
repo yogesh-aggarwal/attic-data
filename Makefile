@@ -1,7 +1,12 @@
 all:
+	@make metadata
 	@make queries
 	@make urls
 	@make products
+
+
+metadata:
+	@poetry run generate_metadata
 
 queries:
 	@poetry run generate_queries
@@ -11,4 +16,3 @@ urls:
 
 products:
 	@poetry run scrape_products
-
